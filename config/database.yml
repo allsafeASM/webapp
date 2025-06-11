@@ -1,0 +1,20 @@
+# config/database.yml
+# Reads connection details from the .env file for security.
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host: <%= ENV['SUPABASE_HOST'] %>
+  port: <%= ENV.fetch('SUPABASE_PORT', 5432) %>
+  username: <%= ENV['SUPABASE_USER'] %>
+  password: <%= ENV['SUPABASE_PASSWORD'] %>
+  database: <%= ENV['SUPABASE_DB_NAME'] %>
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+production:
+  <<: *default
