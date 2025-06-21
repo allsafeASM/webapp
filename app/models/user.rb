@@ -27,4 +27,25 @@ class User < ApplicationRecord
     
     user
   end
+
+  def verified?
+    verified_at.present?
+  end
+
+  def generate_email_verification_token
+    verifier = ActiveSupport::MessageVerifier.new(Rails.application.secret_key_base, digest: 'SHA256')
+    verifier.generate({ user_id: id, sent_at: Time.current.to_i })
+  end
+
+  def self.find_by_email_verification_token!(token)
+    verifier = ActiveSupport::MessageVerifier.new(Rails.application.secret_key_base, digest: 'SHA256')
+    data = verifier.verify(token)
+    Rails.logger.info "Decoded verification token: #{data.inspect}"
+    user = find(data["user_id"])
+    Rails.logger.info "Found user: #{user.inspect}"
+    raise ActiveRecord::RecordNotFound unless user && !user.verified?
+    user
+  rescue ActiveSupport::MessageVerifier::InvalidSignature, ActiveRecord::RecordNotFound
+    raise ActiveRecord::RecordNotFound
+  end
 end

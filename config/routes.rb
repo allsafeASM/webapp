@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
   resource :registration, path: 'sign-up', only: [:new, :create], path_names: { new: '' }
+  resource :verification, only: [:show], param: :token
 
   # OmniAuth routes
   post '/auth/:provider', to: 'omniauth_callbacks#passthru', as: :auth
