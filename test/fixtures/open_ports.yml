@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  port_number: 1
+  is_web: false
+  ip_address: one
+
+two:
+  port_number: 1
+  is_web: false
+  ip_address: two

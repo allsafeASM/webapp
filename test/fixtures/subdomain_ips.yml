@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  resolved_on: 2025-06-22 19:17:08
+  subdomain: one
+  ip_address: one
+
+two:
+  resolved_on: 2025-06-22 19:17:08
+  subdomain: two
+  ip_address: two

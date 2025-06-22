@@ -1,0 +1,29 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  webserver: MyText
+  technologies: 
+  ip: 
+  title: MyText
+  status_code: 1
+  port: 1
+  asn: MyText
+  content_length: 1
+  cname: 
+  url: MyText
+  enumeration_scan: one
+
+two:
+  name: MyString
+  webserver: MyText
+  technologies: 
+  ip: 
+  title: MyText
+  status_code: 1
+  port: 1
+  asn: MyText
+  content_length: 1
+  cname: 
+  url: MyText
+  enumeration_scan: two

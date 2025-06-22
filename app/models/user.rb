@@ -2,6 +2,9 @@ class User < ApplicationRecord
   has_secure_password validations: -> { password_digest.nil? }
   has_many :sessions, dependent: :destroy
   has_many :identities, dependent: :destroy
+  has_many :domains, dependent: :destroy
+  has_many :vulnerability_scans, dependent: :destroy
+  has_many :enumeration_scans, dependent: :destroy
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }
 

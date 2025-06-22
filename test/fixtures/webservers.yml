@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  port_number: 1
+  name: MyString
+  title: MyText
+  status_code: 1
+  content_length: 
+  url: MyText
+  subdomain: one
+
+two:
+  port_number: 1
+  name: MyString
+  title: MyText
+  status_code: 1
+  content_length: 
+  url: MyText
+  subdomain: two

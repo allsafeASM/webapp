@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_21_104645) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_22_162329) do
   create_schema "auth"
   create_schema "extensions"
   create_schema "graphql"
@@ -28,6 +28,58 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_21_104645) do
   enable_extension "pg_catalog.plpgsql"
   enable_extension "vault.supabase_vault"
 
+  create_table "dns_records", force: :cascade do |t|
+    t.text "cname_record"
+    t.text "mx_record"
+    t.text "ns_record"
+    t.bigint "subdomain_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["subdomain_id"], name: "index_dns_records_on_subdomain_id", unique: true
+  end
+
+  create_table "domains", force: :cascade do |t|
+    t.string "domain"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["domain"], name: "index_domains_on_domain", unique: true
+    t.index ["user_id"], name: "index_domains_on_user_id"
+  end
+
+  create_table "enumeration_scan_results", force: :cascade do |t|
+    t.string "name"
+    t.text "webserver"
+    t.jsonb "technologies"
+    t.jsonb "ip"
+    t.text "title"
+    t.integer "status_code"
+    t.integer "port"
+    t.text "asn"
+    t.integer "content_length"
+    t.jsonb "cname"
+    t.text "url"
+    t.bigint "enumeration_scan_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["enumeration_scan_id"], name: "index_enumeration_scan_results_on_enumeration_scan_id"
+  end
+
+  create_table "enumeration_scans", force: :cascade do |t|
+    t.string "name"
+    t.datetime "completed_at"
+    t.string "status"
+    t.text "failure_reason"
+    t.integer "total_assets"
+    t.string "scan_time_elapsed"
+    t.bigint "domain_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["domain_id"], name: "index_enumeration_scans_on_domain_id"
+    t.index ["user_id"], name: "index_enumeration_scans_on_user_id"
+  end
+
   create_table "identities", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "provider", null: false
@@ -44,6 +96,24 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_21_104645) do
     t.index ["user_id"], name: "index_identities_on_user_id"
   end
 
+  create_table "ip_addresses", force: :cascade do |t|
+    t.string "ip_address"
+    t.string "asn"
+    t.string "org"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ip_address"], name: "index_ip_addresses_on_ip_address", unique: true
+  end
+
+  create_table "open_ports", force: :cascade do |t|
+    t.integer "port_number"
+    t.boolean "is_web"
+    t.bigint "ip_address_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ip_address_id"], name: "index_open_ports_on_ip_address_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "ip_address"
@@ -51,6 +121,37 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_21_104645) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_sessions_on_user_id"
+  end
+
+  create_table "subdomain_ips", force: :cascade do |t|
+    t.datetime "resolved_on"
+    t.bigint "subdomain_id", null: false
+    t.bigint "ip_address_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ip_address_id"], name: "index_subdomain_ips_on_ip_address_id"
+    t.index ["subdomain_id", "ip_address_id"], name: "index_subdomain_ips_on_subdomain_and_ip", unique: true
+    t.index ["subdomain_id"], name: "index_subdomain_ips_on_subdomain_id"
+  end
+
+  create_table "subdomains", force: :cascade do |t|
+    t.string "subdomain"
+    t.datetime "first_seen"
+    t.datetime "last_seen"
+    t.string "dns_status"
+    t.boolean "is_web"
+    t.bigint "domain_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["domain_id"], name: "index_subdomains_on_domain_id"
+    t.index ["subdomain"], name: "index_subdomains_on_subdomain", unique: true
+  end
+
+  create_table "technologies", force: :cascade do |t|
+    t.string "name"
+    t.string "version"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
@@ -62,6 +163,72 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_21_104645) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
+  create_table "vulnerability_scan_results", force: :cascade do |t|
+    t.jsonb "vuln_data"
+    t.string "severity"
+    t.string "host"
+    t.bigint "vulnerability_scan_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["vulnerability_scan_id"], name: "index_vulnerability_scan_results_on_vulnerability_scan_id"
+  end
+
+  create_table "vulnerability_scans", force: :cascade do |t|
+    t.string "name"
+    t.datetime "completed_at"
+    t.integer "progress"
+    t.jsonb "severity"
+    t.string "status"
+    t.text "failure_reason"
+    t.boolean "is_rescan"
+    t.string "scan_time_elapsed"
+    t.bigint "domain_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["domain_id"], name: "index_vulnerability_scans_on_domain_id"
+    t.index ["user_id"], name: "index_vulnerability_scans_on_user_id"
+  end
+
+  create_table "webservers", force: :cascade do |t|
+    t.integer "port_number"
+    t.string "name"
+    t.text "title"
+    t.integer "status_code"
+    t.bigint "content_length"
+    t.text "url"
+    t.bigint "subdomain_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["subdomain_id", "port_number"], name: "index_webservers_on_subdomain_id_and_port_number", unique: true
+    t.index ["subdomain_id"], name: "index_webservers_on_subdomain_id"
+  end
+
+  create_table "webservers_technologies", force: :cascade do |t|
+    t.bigint "webserver_id", null: false
+    t.bigint "technology_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["technology_id"], name: "index_webservers_technologies_on_technology_id"
+    t.index ["webserver_id", "technology_id"], name: "index_webservers_technologies_on_webserver_and_tech", unique: true
+    t.index ["webserver_id"], name: "index_webservers_technologies_on_webserver_id"
+  end
+
+  add_foreign_key "dns_records", "subdomains"
+  add_foreign_key "domains", "users"
+  add_foreign_key "enumeration_scan_results", "enumeration_scans"
+  add_foreign_key "enumeration_scans", "domains"
+  add_foreign_key "enumeration_scans", "users"
   add_foreign_key "identities", "users"
+  add_foreign_key "open_ports", "ip_addresses"
   add_foreign_key "sessions", "users"
+  add_foreign_key "subdomain_ips", "ip_addresses"
+  add_foreign_key "subdomain_ips", "subdomains"
+  add_foreign_key "subdomains", "domains"
+  add_foreign_key "vulnerability_scan_results", "vulnerability_scans"
+  add_foreign_key "vulnerability_scans", "domains"
+  add_foreign_key "vulnerability_scans", "users"
+  add_foreign_key "webservers", "subdomains"
+  add_foreign_key "webservers_technologies", "technologies"
+  add_foreign_key "webservers_technologies", "webservers"
 end

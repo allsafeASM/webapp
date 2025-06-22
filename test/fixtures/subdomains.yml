@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  subdomain: MyString
+  first_seen: 2025-06-22 19:08:53
+  last_seen: 2025-06-22 19:08:53
+  dns_status: MyString
+  is_web: false
+  domain: one
+
+two:
+  subdomain: MyString
+  first_seen: 2025-06-22 19:08:53
+  last_seen: 2025-06-22 19:08:53
+  dns_status: MyString
+  is_web: false
+  domain: two

@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  completed_at: 2025-06-22 19:16:50
+  status: MyString
+  failure_reason: MyText
+  total_assets: 1
+  scan_time_elapsed: MyString
+  domain: one
+  user: one
+
+two:
+  name: MyString
+  completed_at: 2025-06-22 19:16:50
+  status: MyString
+  failure_reason: MyText
+  total_assets: 1
+  scan_time_elapsed: MyString
+  domain: two
+  user: two

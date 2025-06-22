@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  cname_record: MyText
+  mx_record: MyText
+  ns_record: MyText
+  subdomain: one
+
+two:
+  cname_record: MyText
+  mx_record: MyText
+  ns_record: MyText
+  subdomain: two
