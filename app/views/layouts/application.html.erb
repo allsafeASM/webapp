@@ -21,7 +21,23 @@
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
   </head>
 
-  <body>
-    <%= yield %>
+  <body class="bg-gray-50">
+    <header class="bg-white shadow-sm">
+      <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <%= link_to "AllSafeASM", root_path, class: "text-xl font-semibold text-gray-700" %>
+        <div class="flex items-center space-x-4">
+          <% if authenticated? %>
+            <%= link_to "My Account", account_path, class: "text-gray-600 hover:text-blue-600" %>
+            <%= button_to "Sign out", session_path, method: :delete, class: "text-gray-600 hover:text-blue-600" %>
+          <% else %>
+            <%= link_to "Sign in", new_session_path, class: "text-gray-600 hover:text-blue-600" %>
+            <%= link_to "Sign up", new_registration_path, class: "text-gray-600 hover:text-blue-600" %>
+          <% end %>
+        </div>
+      </nav>
+    </header>
+    <main class="container mx-auto p-6">
+      <%= yield %>
+    </main>
   </body>
 </html>

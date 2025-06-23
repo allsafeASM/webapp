@@ -4,6 +4,8 @@ Rails.application.routes.draw do
   resources :passwords, param: :token
   resource :registration, path: 'sign-up', only: [:new, :create], path_names: { new: '' }
   resource :verification, only: [:show], param: :token
+  resource :account, only: [:show]
+  resources :domains
 
   # OmniAuth routes
   post '/auth/:provider', to: 'omniauth_callbacks#passthru', as: :auth
@@ -21,5 +23,5 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  root "home#index"
+  root "domains#index"
 end

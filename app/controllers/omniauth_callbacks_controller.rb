@@ -5,13 +5,19 @@ class OmniauthCallbacksController < ApplicationController
     provider = auth_hash.provider.to_s
     provider_name = provider == "google_oauth2" ? "Google" : provider.capitalize
     
-    user = User.from_omniauth(auth_hash)
-    
-    if user.present?
-      start_new_session_for(user)
-      redirect_to after_authentication_url, notice: "Successfully signed in with #{provider_name}."
+    if authenticated?
+      user = Current.session.user
+      Identity.find_or_create_from_auth_hash(user, auth_hash)
+      redirect_to account_path, notice: "Successfully linked your #{provider_name} account."
     else
-      redirect_to new_session_path, alert: "We couldn't sign you in. Please try again."
+      user = User.from_omniauth(auth_hash)
+      
+      if user.present?
+        start_new_session_for(user)
+        redirect_to after_authentication_url, notice: "Successfully signed in with #{provider_name}."
+      else
+        redirect_to new_session_path, alert: "We couldn't sign you in. Please try again."
+      end
     end
   end
   

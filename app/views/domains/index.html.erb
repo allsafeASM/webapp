@@ -1,0 +1,28 @@
+<h1>Request Domain Scan</h1>
+
+<%= form_with model: @domain, url: domains_path, local: true do |form| %>
+  <div>
+    <%= form.label :domain, 'Enter Domain:' %>
+    <%= form.text_field :domain, required: true, autofocus: true %>
+    <%= form.submit 'Request Scan' %>
+  </div>
+  <% if @domain.errors.any? %>
+    <div class="errors">
+      <ul>
+        <% @domain.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+<% end %>
+
+<h2>Your Domain Scans</h2>
+<ul>
+  <% @domains.each do |domain| %>
+    <li>
+      <%= link_to domain.domain, domain_path(domain) %>
+      <%= button_to 'Delete', domain_path(domain), method: :delete, data: { confirm: 'Are you sure?' } %>
+    </li>
+  <% end %>
+</ul> 
