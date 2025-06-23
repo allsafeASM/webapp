@@ -21,22 +21,25 @@
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
   </head>
 
-  <body class="bg-gray-50">
-    <header class="bg-white shadow-sm">
-      <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-        <%= link_to "AllSafeASM", root_path, class: "text-xl font-semibold text-gray-700" %>
+  <body class="bg-background text-main min-h-screen">
+    <header class="bg-surface shadow-sm border-b border-border">
+      <nav class="container mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
+        <%= link_to "AllSafeASM", root_path, class: "text-xl font-semibold text-main hover:text-primary transition bg-transparent" %>
         <div class="flex items-center space-x-4">
           <% if authenticated? %>
-            <%= link_to "My Account", account_path, class: "text-gray-600 hover:text-blue-600" %>
-            <%= button_to "Sign out", session_path, method: :delete, class: "text-gray-600 hover:text-blue-600" %>
-          <% else %>
-            <%= link_to "Sign in", new_session_path, class: "text-gray-600 hover:text-blue-600" %>
-            <%= link_to "Sign up", new_registration_path, class: "text-gray-600 hover:text-blue-600" %>
+            <%= button_to "My Account", account_path, method: :get, class: "text-main hover:text-primary font-semibold transition bg-transparent border-none p-0 cursor-pointer" %>
+            <%= button_to "Sign out", session_path, method: :delete, class: "text-main hover:text-primary font-semibold transition bg-transparent border-none p-0 cursor-pointer" %>
           <% end %>
         </div>
       </nav>
     </header>
-    <main class="container mx-auto p-6">
+    <main class="container mx-auto px-4 sm:px-6 py-6">
+      <% if notice = flash[:notice] %>
+        <div class="py-2 px-3 bg-notice-surface text-notice-text font-medium rounded-lg" role="alert"><%= notice %></div>
+      <% end %>
+      <% if alert = flash[:alert] %>
+        <div class="py-2 px-3 bg-danger-surface text-danger-text font-medium rounded-lg" role="alert"><%= alert %></div>
+      <% end %>
       <%= yield %>
     </main>
   </body>

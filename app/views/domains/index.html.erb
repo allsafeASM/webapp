@@ -1,28 +1,37 @@
-<h1>Request Domain Scan</h1>
-
-<%= form_with model: @domain, url: domains_path, local: true do |form| %>
-  <div>
-    <%= form.label :domain, 'Enter Domain:' %>
-    <%= form.text_field :domain, required: true, autofocus: true %>
-    <%= form.submit 'Request Scan' %>
-  </div>
+<div class="max-w-2xl mx-auto bg-surface rounded-xl shadow-lg p-6 mt-8">
+  <h1 class="text-lg font-bold mb-2 text-main">Request a Scan</h1>
+  <%= form_with model: @domain, url: domains_path, local: true, html: { class: 'flex flex-col gap-2' } do |form| %>
+    <div class="flex-1 w-full">
+      <%= form.label :domain, 'Enter Domain:', class: 'block text-sm font-medium text-muted mb-1' %>
+      <%= form.text_field :domain, required: true, autofocus: true, class: 'w-full rounded-md border border-border bg-background text-text-main px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary focus:border-primary transition' %>
+    </div>
+    <div class="justify-center items-center flex">
+      <%= form.submit 'Request', class: 'px-4 py-1.5 rounded-md bg-primary text-main font-semibold shadow hover:bg-primary-hover transition cursor-pointer' %>
+    </div>
+  <% end %>
   <% if @domain.errors.any? %>
-    <div class="errors">
-      <ul>
+    <div class="bg-danger-surface text-danger-text rounded p-4 mb-4">
+      <ul class="list-disc pl-5">
         <% @domain.errors.full_messages.each do |msg| %>
           <li><%= msg %></li>
         <% end %>
       </ul>
     </div>
   <% end %>
-<% end %>
-
-<h2>Your Domain Scans</h2>
-<ul>
-  <% @domains.each do |domain| %>
-    <li>
-      <%= link_to domain.domain, domain_path(domain) %>
-      <%= button_to 'Delete', domain_path(domain), method: :delete, data: { confirm: 'Are you sure?' } %>
-    </li>
+</div>
+<div class="max-w-2xl mx-auto bg-surface rounded-xl shadow-lg p-6 mt-8">
+  <h2 class="text-lg font-semibold mb-2 text-main">Your Scans</h2>
+  <% if @domains.empty? %>
+    <p class="text-muted">No scans requested yet. Enter a domain above to start.</p>
   <% end %>
-</ul> 
+  <ul class="space-y-4">
+    <% @domains.each do |domain| %>
+      <li class="flex items-center justify-between bg-background rounded-lg px-4 py-3 shadow-sm">
+        <div class="flex items-center gap-3">
+          <span class="font-medium text-text-main"><%= link_to domain.domain, domain_path(domain), class: 'hover:text-primary transition' %></span>
+        </div>
+        <%= button_to 'Delete', domain_path(domain), method: :delete, data: { confirm: 'Are you sure?' }, class: 'ml-4 px-4 py-1 rounded bg-danger text-white font-semibold hover:bg-danger-hover transition' %>
+      </li>
+    <% end %>
+  </ul>
+</div>
