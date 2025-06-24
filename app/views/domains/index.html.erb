@@ -10,7 +10,7 @@
     </div>
   <% end %>
   <% if @domain.errors.any? %>
-    <div class="bg-danger-surface text-danger-text rounded p-4 mb-4">
+    <div class="bg-danger-surface text-danger-text rounded p-2 mt-2">
       <ul class="list-disc pl-5">
         <% @domain.errors.full_messages.each do |msg| %>
           <li><%= msg %></li>
@@ -30,7 +30,7 @@
         <div class="flex items-center gap-3">
           <span class="font-medium text-text-main"><%= link_to domain.domain, domain_path(domain), class: 'hover:text-primary transition' %></span>
         </div>
-        <%= button_to 'Delete', domain_path(domain), method: :delete, data: { confirm: 'Are you sure?' }, class: 'ml-4 px-4 py-1 rounded bg-danger text-white font-semibold hover:bg-danger-hover transition' %>
+        <%= button_to 'Delete', domain_path(domain), method: :delete, data: { confirm: 'Are you sure?' }, class: 'cursor-pointer ml-4 px-4 py-1 rounded bg-danger text-white font-semibold hover:bg-danger-hover transition' %>
       </li>
     <% end %>
   </ul>
