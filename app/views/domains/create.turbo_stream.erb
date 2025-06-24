@@ -1,0 +1,5 @@
+<%= turbo_stream.prepend "domains", partial: "domains/domain_item", locals: { domain: @domain } %>
+
+<% if Current.session.user.domains.count == 1 %>
+  <%= turbo_stream.remove "no_domains_message" %>
+<% end %>

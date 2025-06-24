@@ -1,5 +1,5 @@
 class DomainsController < ApplicationController
-  before_action :set_domain, only: [:show, :destroy]
+  before_action :set_domain, only: [ :show, :destroy ]
 
   def index
     @domains = Current.session.user.domains.order(created_at: :desc)
@@ -13,7 +13,10 @@ class DomainsController < ApplicationController
   def create
     @domain = Current.session.user.domains.build(domain_params)
     if @domain.save
-      redirect_to domains_path, notice: 'Domain scan requested.'
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to domains_path, notice: "Domain scan requested." }
+      end
     else
       @domains = Current.session.user.domains.order(created_at: :desc)
       render :index, status: :unprocessable_entity
@@ -22,7 +25,10 @@ class DomainsController < ApplicationController
 
   def destroy
     @domain.destroy
-    redirect_to domains_path, notice: 'Domain scan deleted.'
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to domains_path, notice: "Domain scan deleted." }
+    end
   end
 
   private

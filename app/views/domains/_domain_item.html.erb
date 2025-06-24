@@ -1,0 +1,6 @@
+<li id="<%= dom_id(domain) %>" class="flex items-center justify-between bg-background rounded-lg px-4 py-3 shadow-sm">
+  <div class="flex items-center gap-3">
+    <span class="font-medium text-text-main"><%= link_to domain.domain, domain_path(domain), class: 'hover:text-primary transition' %></span>
+  </div>
+  <%= button_to 'Delete', domain_path(domain), method: :delete, form: { data: { turbo_confirm: 'Are you sure?' } }, class: 'cursor-pointer ml-4 px-4 py-1 rounded bg-danger text-white font-semibold hover:bg-danger-hover transition' %>
+</li>

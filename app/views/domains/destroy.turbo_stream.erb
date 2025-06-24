@@ -1,0 +1,5 @@
+<%= turbo_stream.remove @domain %>
+
+<% if Current.session.user.domains.empty? %>
+  <%= turbo_stream.append "domains", partial: "domains/no_domains_message" %>
+<% end %>

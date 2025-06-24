@@ -1,6 +1,6 @@
 class VerificationsController < ApplicationController
   allow_unauthenticated_access only: :show
-  
+
   def show
     user = User.find_by_email_verification_token!(params[:token])
     user.update!(verified_at: Time.current)
