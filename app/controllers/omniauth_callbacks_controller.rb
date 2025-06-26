@@ -21,11 +21,6 @@ class OmniauthCallbacksController < ApplicationController
     end
   end
 
-  def passthru
-    # This action is used to direct OmniAuth to the provider's authentication page
-    render status: 404, plain: "Not found. Authentication passthru."
-  end
-
   def failure
     strategy_name = params[:strategy].to_s.humanize if params[:strategy].present? && params[:strategy] != "unknown"
     provider_name = strategy_name || "the authentication provider" # More generic default

@@ -2,15 +2,14 @@ Rails.application.routes.draw do
   get "home/index"
   resource :session
   resources :passwords, param: :token
-  resource :registration, path: 'sign-up', only: [:new, :create], path_names: { new: '' }
-  resource :verification, only: [:show], param: :token
-  resource :account, only: [:show]
+  resource :registration, path: "sign-up", only: [ :new, :create ], path_names: { new: "" } # rubocop:disable Layout/SpaceInsideArrayLiteralBrackets
+  resource :verification, only: [ :show ], param: :token
+  resource :account, only: [ :show ]
   resources :domains
 
   # OmniAuth routes
-  post '/auth/:provider', to: 'omniauth_callbacks#passthru', as: :auth
-  match '/auth/:provider/callback', to: 'omniauth_callbacks#callback', via: [:get, :post]
-  get '/auth/failure', to: 'omniauth_callbacks#failure'
+  match "/auth/:provider/callback", to: "omniauth_callbacks#callback", via: [ :get, :post ]
+  get "/auth/failure", to: "omniauth_callbacks#failure"
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

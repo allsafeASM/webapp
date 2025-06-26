@@ -10,11 +10,11 @@ class User < ApplicationRecord
 
   validates :email_address, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP, message: "must be a valid email address" }
   validates :password, length: { minimum: 8 }, if: -> { password.present? }
-  
+
   def self.from_omniauth(auth_hash)
     email = auth_hash.info.email&.downcase
     user = find_by(email_address: email)
-    
+
     # Create new user if not exists
     if user.nil? && email.present?
       user = create(
@@ -22,12 +22,12 @@ class User < ApplicationRecord
         password: SecureRandom.hex(16) # Random password since they'll login via OAuth
       )
     end
-    
+
     # Create/update identity if user was found or created
     if user.present?
       Identity.find_or_create_from_auth_hash(user, auth_hash)
     end
-    
+
     user
   end
 
@@ -36,12 +36,12 @@ class User < ApplicationRecord
   end
 
   def generate_email_verification_token
-    verifier = ActiveSupport::MessageVerifier.new(Rails.application.secret_key_base, digest: 'SHA256')
+    verifier = ActiveSupport::MessageVerifier.new(Rails.application.secret_key_base, digest: "SHA256")
     verifier.generate({ user_id: id, sent_at: Time.current.to_i })
   end
 
   def self.find_by_email_verification_token!(token)
-    verifier = ActiveSupport::MessageVerifier.new(Rails.application.secret_key_base, digest: 'SHA256')
+    verifier = ActiveSupport::MessageVerifier.new(Rails.application.secret_key_base, digest: "SHA256")
     data = verifier.verify(token)
     Rails.logger.info "Decoded verification token: #{data.inspect}"
     user = find(data["user_id"])
