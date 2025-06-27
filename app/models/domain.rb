@@ -12,6 +12,20 @@ class Domain < ApplicationRecord
 
   before_validation :normalize_domain
 
+  broadcasts_to ->(domain) { [ domain.user, :domains ] }, inserts_by: :prepend, target: "domains"
+
+  after_create_commit do
+    if user.domains.one? # First domain for the user
+      broadcast_remove_to [ user, :domains ], target: "no_domains_message"
+    end
+  end
+
+  after_destroy_commit do
+    if user.domains.empty? # Last domain for the user
+      broadcast_append_to [ user, :domains ], target: "domains", partial: "domains/no_domains_message"
+    end
+  end
+
   private
 
   def normalize_domain

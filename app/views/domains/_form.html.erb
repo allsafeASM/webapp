@@ -1,6 +1,6 @@
-<div class="max-w-2xl mx-auto bg-surface rounded-xl shadow-lg p-6 mt-8">
+<div id="domain_form" class="max-w-2xl mx-auto bg-surface rounded-xl shadow-lg p-6 mt-8">
   <h1 class="text-lg font-bold mb-2 text-main">Request a Scan</h1>
-  <%= form_with model: domain, url: domains_path, local: false, html: { class: 'flex flex-col gap-2', data: { controller: 'domain-form', action: 'turbo:submit-end->domain-form#reset' } } do |form| %>
+  <%= form_with model: domain, url: domains_path, html: { class: 'flex flex-col gap-2' } do |form| %>
     <div class="flex-1 w-full">
       <%= form.label :domain, 'Enter Domain:', class: 'block text-sm font-medium text-muted mb-1' %>
       <%= form.text_field :domain, required: true, autofocus: true, class: 'w-full rounded-md border border-border bg-background text-text-main px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary focus:border-primary transition' %>

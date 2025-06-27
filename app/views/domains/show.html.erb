@@ -2,8 +2,20 @@
   <h1 class="text-2xl font-bold mb-6 text-main">Domain Scan Details</h1>
   <div class="mb-6">
     <p class="mb-2"><span class="font-semibold text-main">Domain:</span> <span class="text-gray-900 dark:text-gray-100"><%= @domain.domain %></span></p>
-    <p class="mb-2"><span class="font-semibold text-main">Created At:</span> <span class="text-gray-900 dark:text-gray-100"><%= @domain.created_at %></span></p>
-    <p><span class="font-semibold text-main">Updated At:</span> <span class="text-gray-900 dark:text-gray-100"><%= @domain.updated_at %></span></p>
+    <p><span class="font-semibold text-main">Requested at:</span> <span class="text-gray-900 dark:text-gray-100"><%= @domain.created_at.to_formatted_s(:long) %></span></p>
   </div>
-  <%= link_to 'Back to Scans', domains_path, class: 'inline-block cursor-pointer px-6 py-2 rounded-lg bg-blue-600 text-main font-semibold shadow hover:bg-blue-700 transition' %>
+
+  <%= turbo_frame_tag "domain_scans",
+                      src: domain_path(@domain, format: :turbo_stream),
+                      data: {
+                        controller: "polling",
+                        polling_url_value: domain_path(@domain, format: :turbo_stream),
+                        polling_interval_value: 5000
+                      } do %>
+    <div class="p-4 text-center text-gray-500">
+      <p>Loading latest scan results...</p>
+    </div>
+  <% end %>
+
+  <%= link_to 'Back to domains list', root_url, class: 'inline-block cursor-pointer px-6 py-2 rounded-lg bg-blue-600 text-main font-semibold shadow hover:bg-blue-700 transition mt-6' %>
 </div>

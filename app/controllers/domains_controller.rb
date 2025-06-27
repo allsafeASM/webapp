@@ -8,27 +8,26 @@ class DomainsController < ApplicationController
 
   def show
     # @domain is set by before_action
+    respond_to do |format|
+      format.html
+      format.turbo_stream { render "show", locals: { domain: @domain } }
+    end
   end
 
   def create
     @domain = Current.session.user.domains.build(domain_params)
-    if @domain.save
-      respond_to do |format|
-        format.turbo_stream
-        format.html { redirect_to domains_path, notice: "Domain scan requested." }
+    respond_to do |format|
+      if @domain.save
+        format.turbo_stream # renders create.turbo_stream.erb
+      else
+        format.turbo_stream { render :create_failure, status: :unprocessable_entity }
+        format.html { render :index, status: :unprocessable_entity }
       end
-    else
-      @domains = Current.session.user.domains.order(created_at: :desc)
-      render :index, status: :unprocessable_entity
     end
   end
 
   def destroy
     @domain.destroy
-    respond_to do |format|
-      format.turbo_stream
-      format.html { redirect_to domains_path, notice: "Domain scan deleted." }
-    end
   end
 
   private

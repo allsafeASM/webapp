@@ -5,7 +5,14 @@ Rails.application.routes.draw do
   resource :registration, path: "sign-up", only: [ :new, :create ], path_names: { new: "" } # rubocop:disable Layout/SpaceInsideArrayLiteralBrackets
   resource :verification, only: [ :show ], param: :token
   resource :account, only: [ :show ]
-  resources :domains
+  resources :domains do
+    resources :enumeration_scans, only: [ :index, :show ] do
+      resources :enumeration_scan_results, only: [ :index, :show ]
+    end
+    resources :vulnerability_scans, only: [ :index, :show ] do
+      resources :vulnerability_scan_results, only: [ :index, :show ]
+    end
+  end
 
   # OmniAuth routes
   match "/auth/:provider/callback", to: "omniauth_callbacks#callback", via: [ :get, :post ]

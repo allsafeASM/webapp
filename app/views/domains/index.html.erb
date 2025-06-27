@@ -1,3 +1,4 @@
+<%= turbo_stream_from [Current.session.user, :domains] %>
 <%= render "form", domain: @domain %>
 
 <div class="max-w-2xl mx-auto bg-surface rounded-xl shadow-lg p-6 mt-8">
@@ -6,7 +7,7 @@
     <% if @domains.empty? %>
       <%= render "no_domains_message" %>
     <% else %>
-      <%= render partial: 'domain_item', collection: @domains, as: :domain %>
+      <%= render partial: 'domain', collection: @domains, as: :domain %>
     <% end %>
   </ul>
 </div>
