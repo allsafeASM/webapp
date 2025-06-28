@@ -3,4 +3,12 @@ class EnumerationScan < ApplicationRecord
   belongs_to :user
 
   has_many :enumeration_scan_results, dependent: :destroy
+
+  before_validation :set_user_from_domain, on: :create
+
+  private
+
+  def set_user_from_domain
+    self.user ||= domain&.user
+  end
 end

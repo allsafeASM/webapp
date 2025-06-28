@@ -1,43 +1,36 @@
-<%= turbo_frame_tag "domain_scans",
-                    data: {
-                      controller: "polling",
-                      polling_url_value: domain_path(domain, format: :turbo_stream),
-                      polling_interval_value: 5000
-                    } do %>
-  <div class="space-y-6">
-    <div>
-      <h2 class="text-xl font-bold text-main mb-4">Enumeration Scans</h2>
-      <% if domain.enumeration_scans.any? %>
-        <ul class="divide-y divide-border">
-          <% domain.enumeration_scans.each do |scan| %>
-            <li class="py-3">
-              <p><span class="font-semibold">Status:</span> <%= scan.status %></p>
-              <p><span class="font-semibold">Completed:</span> <%= scan.completed_at&.to_formatted_s(:long) || 'N/A' %></p>
-              <p><span class="font-semibold">Assets Found:</span> <%= scan.total_assets %></p>
-            </li>
-          <% end %>
-        </ul>
-      <% else %>
-        <p class="text-muted">No enumeration scans found.</p>
-      <% end %>
-    </div>
-
-    <div>
-      <h2 class="text-xl font-bold text-main mb-4">Vulnerability Scans</h2>
-      <% if domain.vulnerability_scans.any? %>
-        <ul class="divide-y divide-border">
-          <% domain.vulnerability_scans.each do |scan| %>
-            <li class="py-3">
-              <p><span class="font-semibold">Status:</span> <%= scan.status %></p>
-              <p><span class="font-semibold">Progress:</span> <%= scan.progress %>%</p>
-              <p><span class="font-semibold">Severity:</span> <%= scan.severity %></p>
-              <p><span class="font-semibold">Completed:</span> <%= scan.completed_at&.to_formatted_s(:long) || 'N/A' %></p>
-            </li>
-          <% end %>
-        </ul>
-      <% else %>
-        <p class="text-muted">No vulnerability scans found.</p>
-      <% end %>
-    </div>
+<div class="space-y-6">
+  <div>
+    <h2 class="text-xl font-bold text-main mb-4">Enumeration Scans</h2>
+    <% if domain.enumeration_scans.any? %>
+      <ul class="divide-y divide-border">
+        <% domain.enumeration_scans.each do |scan| %>
+          <li class="py-3">
+            <p><span class="font-semibold">Status:</span> <%= scan.status %></p>
+            <p><span class="font-semibold">Completed:</span> <%= scan.completed_at&.to_formatted_s(:long) || 'N/A' %></p>
+            <p><span class="font-semibold">Assets Found:</span> <%= scan.total_assets %></p>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="text-muted">No enumeration scans found.</p>
+    <% end %>
   </div>
-<% end %>
+
+  <div>
+    <h2 class="text-xl font-bold text-main mb-4">Vulnerability Scans</h2>
+    <% if domain.vulnerability_scans.any? %>
+      <ul class="divide-y divide-border">
+        <% domain.vulnerability_scans.each do |scan| %>
+          <li class="py-3">
+            <p><span class="font-semibold">Status:</span> <%= scan.status %></p>
+            <p><span class="font-semibold">Progress:</span> <%= scan.progress %>%</p>
+            <p><span class="font-semibold">Severity:</span> <%= scan.severity %></p>
+            <p><span class="font-semibold">Completed:</span> <%= scan.completed_at&.to_formatted_s(:long) || 'N/A' %></p>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="text-muted">No vulnerability scans found.</p>
+    <% end %>
+  </div>
+</div>

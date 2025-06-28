@@ -1,38 +1,32 @@
-import { Controller } from "@hotwired/stimulus";
+import { Controller } from "@hotwired/stimulus"
 
-// Connects to data-controller="polling"
 export default class extends Controller {
-  static values = {
-    // The URL to fetch for updates.
-    url: String,
-    // The polling interval in milliseconds.
-    interval: { type: Number, default: 5000 }
-  }
+  static targets = ["frame"]
+  static values = { interval: { type: Number, default: 10000 } }
 
   connect() {
-    this.startPolling();
+    this.startPolling()
   }
 
   disconnect() {
-    this.stopPolling();
+    this.stopPolling()
   }
 
   startPolling() {
-    // If a timer is already running, clear it first.
-    this.stopPolling();
-
+    this.stopPolling() // Clear any existing timers
     this.timer = setInterval(() => {
-      // This clever trick forces Turbo to reload the frame by making it
-      // think the initial `src` load was never completed.
-      // This is more idiomatic than manually fetching and replacing content.
-      this.element.removeAttribute('complete');
-    }, this.intervalValue);
+      // Turbo adds the `busy` attribute during a network request.
+      // We only trigger a reload if the frame is not currently busy.
+      if (!this.frameTarget.hasAttribute("busy")) {
+        this.frameTarget.reload()
+      }
+    }, this.intervalValue)
   }
 
   stopPolling() {
     if (this.timer) {
-      clearInterval(this.timer);
-      this.timer = null;
+      clearInterval(this.timer)
+      this.timer = null
     }
   }
 }

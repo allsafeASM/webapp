@@ -5,17 +5,11 @@
     <p><span class="font-semibold text-main">Requested at:</span> <span class="text-gray-900 dark:text-gray-100"><%= @domain.created_at.to_formatted_s(:long) %></span></p>
   </div>
 
-  <%= turbo_frame_tag "domain_scans",
-                      src: domain_path(@domain, format: :turbo_stream),
-                      data: {
-                        controller: "polling",
-                        polling_url_value: domain_path(@domain, format: :turbo_stream),
-                        polling_interval_value: 5000
-                      } do %>
-    <div class="p-4 text-center text-gray-500">
-      <p>Loading latest scan results...</p>
-    </div>
-  <% end %>
+  <div data-controller="polling" data-polling-interval-value="10000" data-polling-url-value="<%= domain_path(@domain, format: :turbo_stream) %>">
+    <%= turbo_frame_tag "domain_scans", src: domain_path(@domain, format: :turbo_stream), data: { polling_target: "frame" } do %>
+      <%= render partial: "scans_list", locals: { domain: @domain } %>
+    <% end %>
+  </div>
 
   <%= link_to 'Back to domains list', root_url, class: 'inline-block cursor-pointer px-6 py-2 rounded-lg bg-blue-600 text-main font-semibold shadow hover:bg-blue-700 transition mt-6' %>
 </div>
