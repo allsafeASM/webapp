@@ -39,19 +39,19 @@ Rails.application.configure do
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address:              'smtp.gmail.com',
+    address:              "smtp.gmail.com",
     port:                 587,
-    domain:               'gmail.com', # Or your custom domain if you use Google Workspace
+    domain:               "gmail.com", # Or your custom domain if you use Google Workspace
     user_name:            Rails.application.credentials.dig(:gmail, :username),
     password:             Rails.application.credentials.dig(:gmail, :password),
-    authentication:       'plain',
+    authentication:       "plain",
     enable_starttls_auto: true,
     open_timeout:         5,
     read_timeout:         5
   }
 
   # Ensure you have a default URL option set for links in emails
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 } # Adjust for production
+  config.action_mailer.default_url_options = { host: "localhost", port: 3000 } # Adjust for production
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log

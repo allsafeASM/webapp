@@ -1,14 +1,14 @@
 # config/database.yml
-# Reads connection details from the .env file for security.
+# Reads connection details from Rails credentials for security.
 default: &default
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  host: <%= ENV['SUPABASE_HOST'] %>
-  port: <%= ENV.fetch('SUPABASE_PORT', 5432) %>
-  username: <%= ENV['SUPABASE_USER'] %>
-  password: <%= ENV['SUPABASE_PASSWORD'] %>
-  database: <%= ENV['SUPABASE_DB_NAME'] %>
+  host: <%= Rails.application.credentials.dig(:db_prod, :host) %>
+  port: <%= Rails.application.credentials.dig(:db_prod, :port) || 5432 %>
+  username: <%= Rails.application.credentials.dig(:db_prod, :user) %>
+  password: <%= Rails.application.credentials.dig(:db_prod, :passwd) %>
+  database: <%= Rails.application.credentials.dig(:db_prod, :name) %>
 
 development:
   <<: *default

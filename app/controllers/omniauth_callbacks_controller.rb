@@ -45,7 +45,7 @@ class OmniauthCallbacksController < ApplicationController
         alert_message = "Authentication with #{provider_name} failed due to a security issue. Please try again."
       end
     end
-    redirect_to root_url, alert: alert_message
+    redirect_to account_path, alert: alert_message
   end
 
   private

@@ -1,6 +1,17 @@
 Rails.application.config.middleware.use OmniAuth::Builder do
-  provider :google_oauth2, ENV["GOOGLE_CLIENT_ID"], ENV["GOOGLE_CLIENT_SECRET"]
-  provider :github, ENV["GITHUB_CLIENT_ID"], ENV["GITHUB_CLIENT_SECRET"]
+  provider :google_oauth2,
+    Rails.application.credentials.dig(:google, :client_id),
+    Rails.application.credentials.dig(:google, :client_secret)
+
+  if Rails.env.production?
+    provider :github,
+      Rails.application.credentials.dig(:github_prod, :client_id),
+      Rails.application.credentials.dig(:github_prod, :client_secret)
+  else
+    provider :github,
+      Rails.application.credentials.dig(:github_dev, :client_id),
+      Rails.application.credentials.dig(:github_dev, :client_secret)
+  end
 
   # Configure OmniAuth to use form_authenticity_token
   # Already handled by gem "omniauth-rails_csrf_protection"
