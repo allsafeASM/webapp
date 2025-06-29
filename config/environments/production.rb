@@ -80,6 +80,10 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
+  # Action Cable settings
+  config.action_cable.url = "wss://allsafeasm.me/cable"
+  config.action_cable.allowed_request_origins = [ "https://allsafeasm.me" ]
+
   # Only use :id for inspections in production.
   config.active_record.attributes_for_inspect = [ :id ]
 

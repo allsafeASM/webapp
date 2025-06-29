@@ -14,6 +14,7 @@ class PasswordsController < ApplicationController
   end
 
   def edit
+    @token = params[:token]
   end
 
   def update

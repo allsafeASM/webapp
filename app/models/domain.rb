@@ -8,7 +8,7 @@ class Domain < ApplicationRecord
   # A direct way to get all unique IPs for a domain
   has_many :ip_addresses, -> { distinct }, through: :subdomains
 
-  validates :domain, presence: true, uniqueness: { scope: :user_id }, format: { with: /\A[a-zA-Z0-9.-]+\z/, message: "must be a valid domain name" }
+  validates :domain, presence: true, uniqueness: { scope: :user_id }, format: { with: /\A(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,63}\z/, message: "must be a valid domain name" }
 
   before_validation :normalize_domain
 
