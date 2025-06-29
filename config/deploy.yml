@@ -7,7 +7,7 @@ image: abdorithm/allsafe-asm
 # Deploy to these servers.
 servers:
   web:
-    - 4.233.217.201
+    - 51.116.96.28
   # job:
   #   hosts:
   #     - 192.168.0.1
@@ -55,9 +55,9 @@ builder:
 #   shell: app exec --interactive --reuse "bash"
 
 # Use a different ssh user than root
-#
-# ssh:
-#   user: app
+
+ssh:
+  user: allsafe
 
 # Use a persistent storage volume.
 #
