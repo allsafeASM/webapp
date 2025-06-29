@@ -69,6 +69,3 @@ end
 gem "dotenv-rails"
 gem "tailwindcss-ruby"
 gem "tailwindcss-rails"
-
-# Use Redis for Action Cable
-gem "redis"
