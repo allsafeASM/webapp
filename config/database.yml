@@ -4,17 +4,22 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development: &development
+  <<: *default
+  host: <%= Rails.application.credentials.dig(:db_dev, :host) %>
+  port: <%= Rails.application.credentials.dig(:db_dev, :port) || 5432 %>
+  username: <%= Rails.application.credentials.dig(:db_dev, :user) %>
+  password: <%= Rails.application.credentials.dig(:db_dev, :passwd) %>
+  database: <%= Rails.application.credentials.dig(:db_dev, :name) %>
+
+test:
+  <<: *development
+
+production: &production
+  <<: *default
   host: <%= Rails.application.credentials.dig(:db_prod, :host) %>
   port: <%= Rails.application.credentials.dig(:db_prod, :port) || 5432 %>
   username: <%= Rails.application.credentials.dig(:db_prod, :user) %>
   password: <%= Rails.application.credentials.dig(:db_prod, :passwd) %>
   database: <%= Rails.application.credentials.dig(:db_prod, :name) %>
-
-development:
-  <<: *default
-
-test:
-  <<: *default
-
-production:
-  <<: *default
