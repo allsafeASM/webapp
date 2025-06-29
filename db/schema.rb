@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_22_162329) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_29_160000) do
   create_schema "auth"
   create_schema "extensions"
   create_schema "graphql"
@@ -43,7 +43,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_22_162329) do
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["domain"], name: "index_domains_on_domain", unique: true
+    t.index ["domain"], name: "index_domains_on_domain"
     t.index ["user_id"], name: "index_domains_on_user_id"
   end
 
