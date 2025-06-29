@@ -1,9 +1,14 @@
-# config/database.yml
-# Reads connection details from Rails credentials for security.
+# PostgreSQL is the default database for the models and so.
 default: &default
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+# Websockets uses Solid Cable with SQLite in production.
+sqlite: &sqlite
+  adapter: sqlite3
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 5000
 
 development: &development
   <<: *default
@@ -23,3 +28,8 @@ production: &production
   username: <%= Rails.application.credentials.dig(:db_prod, :user) %>
   password: <%= Rails.application.credentials.dig(:db_prod, :passwd) %>
   database: <%= Rails.application.credentials.dig(:db_prod, :name) %>
+
+cable:
+  <<: *sqlite
+  database: storage/cable.sqlite3
+  migrations_paths: db/cable_migrate
