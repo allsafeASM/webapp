@@ -19,7 +19,8 @@ class User < ApplicationRecord
     if user.nil? && email.present?
       user = create(
         email_address: email,
-        password: SecureRandom.hex(16) # Random password since they'll login via OAuth
+        password: SecureRandom.hex(16), # Random password since they'll login via OAuth
+        verified_at: Time.current # Automatically verify on creation
       )
     end
 
@@ -43,9 +44,9 @@ class User < ApplicationRecord
   def self.find_by_email_verification_token!(token)
     verifier = ActiveSupport::MessageVerifier.new(Rails.application.secret_key_base, digest: "SHA256")
     data = verifier.verify(token)
-    Rails.logger.info "Decoded verification token: #{data.inspect}"
+    # Rails.logger.info "Decoded verification token: #{data.inspect}"
     user = find(data["user_id"])
-    Rails.logger.info "Found user: #{user.inspect}"
+    # Rails.logger.info "Found user: #{user.inspect}"
     raise ActiveRecord::RecordNotFound unless user && !user.verified?
     user
   rescue ActiveSupport::MessageVerifier::InvalidSignature, ActiveRecord::RecordNotFound
