@@ -6,6 +6,6 @@ class CreateWebserversTechnologies < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
-    add_index :webservers_technologies, [:webserver_id, :technology_id], unique: true, name: 'index_webservers_technologies_on_webserver_and_tech'
+    add_index :webservers_technologies, [ :webserver_id, :technology_id ], unique: true, name: 'index_webservers_technologies_on_webserver_and_tech'
   end
 end

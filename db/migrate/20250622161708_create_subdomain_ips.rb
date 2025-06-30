@@ -7,6 +7,6 @@ class CreateSubdomainIps < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
-    add_index :subdomain_ips, [:subdomain_id, :ip_address_id], unique: true, name: 'index_subdomain_ips_on_subdomain_and_ip'
+    add_index :subdomain_ips, [ :subdomain_id, :ip_address_id ], unique: true, name: 'index_subdomain_ips_on_subdomain_and_ip'
   end
 end

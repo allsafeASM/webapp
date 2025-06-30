@@ -11,6 +11,6 @@ class CreateWebservers < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
-    add_index :webservers, [:subdomain_id, :port_number], unique: true
+    add_index :webservers, [ :subdomain_id, :port_number ], unique: true
   end
 end
