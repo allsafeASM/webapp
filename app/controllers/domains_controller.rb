@@ -1,3 +1,5 @@
+require "httparty"
+
 class DomainsController < ApplicationController
   before_action :set_domain, only: [ :show, :destroy ]
 
@@ -24,6 +26,22 @@ class DomainsController < ApplicationController
         format.html { render :index, status: :unprocessable_entity }
       end
     end
+    api_key = Rails.application.credentials.dig(:api_key)
+    url = "https://asm-durable-function.azurewebsites.net/api/orchestrators/start_scan?code=#{api_key}"
+    if api_key.present?
+      # Notify the external API about the new scan request
+      Rails.logger.info("Notifying API about new domain: #{@domain.domain}, ID: #{@domain.id}")
+      response = HTTParty.post(
+        url,
+        body: { scan_id: @domain.id, domain: @domain.domain }.to_json,
+        headers: { "Content-Type" => "application/json" }
+      )
+      unless response.success?
+        Rails.logger.error("Failed to notify API about new domain: #{response.body}")
+      end
+    else
+      Rails.logger.warn("API key is not configured, skipping API notification for new domain.")
+    end
   end
 
   def destroy
@@ -33,6 +51,8 @@ class DomainsController < ApplicationController
   private
     def set_domain
       @domain = Current.session.user.domains.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      redirect_to root_url, alert: "Domain not found."
     end
 
     def domain_params
