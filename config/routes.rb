@@ -7,12 +7,8 @@ Rails.application.routes.draw do
   resource :account, only: [ :show ]
   resources :identities, only: [ :destroy ]
   resources :domains do
-    resources :enumeration_scans, only: [ :index, :show ] do
-      resources :enumeration_scan_results, only: [ :index, :show ]
-    end
-    resources :vulnerability_scans, only: [ :index, :show ] do
-      resources :vulnerability_scan_results, only: [ :index, :show ]
-    end
+    resources :enumeration_scans, only: [ :show ]
+    resources :vulnerability_scans, only: [ :show ]
   end
 
   # OmniAuth routes

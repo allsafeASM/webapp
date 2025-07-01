@@ -14,4 +14,15 @@
   --color-danger-text: #fca5a5;
   --color-notice-surface: #1e3a8a;
   --color-notice-text: #93c5fd;
+  --color-success-surface: #dcfce7;
+  --color-success-text: #166534;
+  --color-warning-surface: #fef9c3;
+  --color-warning-text: #92400e;
 }
+
+.bg-success-surface { background-color: var(--color-success-surface); }
+.text-success-text { color: var(--color-success-text); }
+.bg-warning-surface { background-color: var(--color-warning-surface); }
+.text-warning-text { color: var(--color-warning-text); }
+.bg-danger-surface { background-color: var(--color-danger-surface); }
+.text-danger-text { color: var(--color-danger-text); }

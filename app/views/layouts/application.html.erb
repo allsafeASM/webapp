@@ -25,11 +25,11 @@
   <body class="bg-background text-main min-h-screen">
     <header class="bg-surface shadow-sm border-b border-border">
       <nav class="container mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
-        <%= link_to "AllSafeASM", root_path, class: "text-xl font-semibold text-main hover:text-primary transition bg-transparent" %>
+        <%= link_to "AllSafeASM", root_path, class: "text-xl font-bold text-main hover:text-primary transition bg-transparent" %>
         <div class="flex items-center space-x-4">
           <% if authenticated? %>
-            <%= button_to "Account", account_path, method: :get, class: "text-main hover:text-primary font-semibold transition bg-transparent border-none p-0 cursor-pointer" %>
-            <%= button_to "Sign out", session_path, method: :delete, class: "text-main hover:text-primary font-semibold transition bg-transparent border-none p-0 cursor-pointer" %>
+            <%= button_to "Account", account_path, method: :get, class: "text-main hover:text-primary font-bold transition bg-transparent border-none p-0 cursor-pointer" %>
+            <%= button_to "Sign out", session_path, method: :delete, class: "text-main hover:text-primary font-bold transition bg-transparent border-none p-0 cursor-pointer" %>
           <% end %>
         </div>
       </nav>

@@ -1,13 +1,30 @@
-<div class="space-y-6">
-  <div>
-    <h2 class="text-xl font-bold text-main mb-4">Enumeration Scans</h2>
-    <% if domain.enumeration_scans.any? %>
-      <ul class="divide-y divide-border">
-        <% domain.enumeration_scans.each do |scan| %>
-          <li class="py-3">
-            <p><span class="font-semibold">Status:</span> <%= scan.status %></p>
-            <p><span class="font-semibold">Completed:</span> <%= scan.completed_at&.to_formatted_s(:long) || 'N/A' %></p>
-            <p><span class="font-semibold">Assets Found:</span> <%= scan.total_assets %></p>
+<div class="space-y-8">
+  <div class="bg-surface rounded-xl shadow-lg p-6">
+    <h2 class="text-lg font-semibold mb-4 text-main">Enumeration Scans</h2>
+    <% enum_scans = domain.enumeration_scans.order(created_at: :desc) %>
+    <% if enum_scans.any? %>
+      <ul class="space-y-4">
+        <% enum_scans.each do |scan| %>
+          <li class="bg-background p-4 rounded-lg shadow">
+            <div class="flex justify-between items-center">
+              <h3 class="text-lg font-bold text-main">Enumeration Scan</h3>
+              <span class="text-sm font-semibold px-2 py-1 rounded-full
+                <%= 'bg-success-surface text-success-text' if scan.status == 'completed' %>
+                <%= 'bg-warning-surface text-warning-text' if scan.status == 'running' || scan.status == 'pending' %>
+                <%= 'bg-danger-surface text-danger-text' if scan.status == 'failed' %>
+              ">
+                <%= scan.status&.capitalize %>
+              </span>
+            </div>
+            <div class="mt-2 text-sm text-muted">
+              <p>Requested at: <%= scan.created_at.to_formatted_s(:long) %></p>
+              <% if scan.status == 'failed' && scan.failure_reason.present? %>
+                <p class="text-danger-text"><span class="font-semibold">Reason:</span> <%= scan.failure_reason %></p>
+              <% end %>
+              <p><span class="font-semibold">Assets Found:</span> <%= scan.total_assets || 0 %></p>
+              <p><span class="font-semibold">Completed:</span> <%= scan.completed_at&.to_formatted_s(:long) || 'N/A' %></p>
+              <%= link_to 'View Details', domain_enumeration_scan_path(domain, scan), class: 'inline-block mt-2 px-4 py-1.5 rounded bg-primary text-main font-semibold shadow hover:bg-primary-hover transition' %>
+            </div>
           </li>
         <% end %>
       </ul>
@@ -16,16 +33,35 @@
     <% end %>
   </div>
 
-  <div>
-    <h2 class="text-xl font-bold text-main mb-4">Vulnerability Scans</h2>
-    <% if domain.vulnerability_scans.any? %>
-      <ul class="divide-y divide-border">
-        <% domain.vulnerability_scans.each do |scan| %>
-          <li class="py-3">
-            <p><span class="font-semibold">Status:</span> <%= scan.status %></p>
-            <p><span class="font-semibold">Progress:</span> <%= scan.progress %>%</p>
-            <p><span class="font-semibold">Severity:</span> <%= scan.severity %></p>
-            <p><span class="font-semibold">Completed:</span> <%= scan.completed_at&.to_formatted_s(:long) || 'N/A' %></p>
+  <div class="bg-surface rounded-xl shadow-lg p-6">
+    <h2 class="text-lg font-semibold mb-4 text-main">Vulnerability Scans</h2>
+    <% vuln_scans = domain.vulnerability_scans.order(created_at: :desc) %>
+    <% if vuln_scans.any? %>
+      <ul class="space-y-4">
+        <% vuln_scans.each do |scan| %>
+          <li class="bg-background p-4 rounded-lg shadow">
+            <div class="flex justify-between items-center">
+              <h3 class="text-lg font-bold text-main">Vulnerability Scan</h3>
+              <span class="text-sm font-semibold px-2 py-1 rounded-full
+                <%= 'bg-success-surface text-success-text' if scan.status == 'completed' %>
+                <%= 'bg-warning-surface text-warning-text' if scan.status == 'running' || scan.status == 'pending' %>
+                <%= 'bg-danger-surface text-danger-text' if scan.status == 'failed' %>
+              ">
+                <%= scan.status&.capitalize %>
+              </span>
+            </div>
+            <div class="mt-2 text-sm text-muted">
+              <p>Requested at: <%= scan.created_at.to_formatted_s(:long) %></p>
+              <% if scan.status == 'failed' && scan.failure_reason.present? %>
+                <p class="text-danger-text"><span class="font-semibold">Reason:</span> <%= scan.failure_reason %></p>
+              <% end %>
+              <p><span class="font-semibold">Progress:</span> <%= scan.progress || 0 %>%</p>
+              <% if scan.severity.present? %>
+                <p><span class="font-semibold">Severity:</span> <%= scan.severity %></p>
+              <% end %>
+              <p><span class="font-semibold">Completed:</span> <%= scan.completed_at&.to_formatted_s(:long) || 'N/A' %></p>
+              <%= link_to 'View Details', domain_vulnerability_scan_path(domain, scan), class: 'inline-block mt-2 px-4 py-1.5 rounded bg-primary text-main font-semibold shadow hover:bg-primary-hover transition' %>
+            </div>
           </li>
         <% end %>
       </ul>

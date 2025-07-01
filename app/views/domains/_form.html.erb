@@ -1,17 +1,30 @@
-<div id="domain_form" class="max-w-2xl mx-auto bg-surface rounded-xl shadow-lg p-6 mt-8">
-  <h1 class="text-lg font-bold mb-2 text-main">Request a Scan</h1>
-  <%= form_with model: domain, url: domains_path, html: { class: 'flex flex-col gap-2' } do |form| %>
-    <div class="flex-1 w-full">
-      <%= form.label :domain, 'Enter Domain:', class: 'block text-sm font-medium text-muted mb-1' %>
-      <%= form.text_field :domain, required: true, autofocus: true, class: 'w-full rounded-md border border-border bg-background text-text-main px-3 py-1.5 text-sm focus:ring-2 focus:ring-primary focus:border-primary transition' %>
+<div id="domain_form" class="max-w-3xl mx-auto bg-surface rounded-xl shadow-lg p-8 mt-8">
+  <div class="text-center mb-8">
+    <h1 class="text-2xl font-bold text-main mb-2">Request a Security Scan</h1>
+    <p class="text-muted">Enter a domain to begin comprehensive security analysis</p>
+  </div>
+  
+  <%= form_with model: domain, url: domains_path, html: { class: 'space-y-4' } do |form| %>
+    <div class="space-y-2">
+      <%= form.label :domain, 'Domain Name', class: 'block text-lg font-semibold text-main text-center' %>
+      <div class="relative">
+        <%= form.text_field :domain, 
+            required: true, 
+            autofocus: true, 
+            placeholder: "example.com",
+            class: 'w-full rounded-lg border-1 border-border bg-background text-main px-4 py-2 text-lg text-center focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200 shadow-sm hover:shadow-md' %>
+      </div>
     </div>
-    <div class="justify-center items-center flex">
-      <%= form.submit 'Request', class: 'px-4 py-1.5 rounded-md bg-primary text-main font-semibold shadow hover:bg-primary-hover transition cursor-pointer' %>
+    
+    <div class="flex justify-center">
+      <%= form.submit 'Start Scan', class: 'px-6 py-2 rounded-md bg-primary text-main font-semibold shadow hover:bg-primary-hover transition cursor-pointer' %>
     </div>
   <% end %>
+  
   <% if domain.errors.any? %>
-    <div class="bg-danger-surface text-danger-text rounded p-2 mt-2">
-      <ul class="list-disc pl-5">
+    <div class="bg-danger-surface border border-danger text-danger-text rounded-lg p-4 mt-6">
+      <h3 class="font-semibold mb-2">Please correct the following errors:</h3>
+      <ul class="list-disc pl-5 space-y-1">
         <% domain.errors.full_messages.each do |msg| %>
           <li><%= msg %></li>
         <% end %>

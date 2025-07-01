@@ -1,7 +1,7 @@
 <%= turbo_stream_from [Current.session.user, :domains] %>
 <%= render "form", domain: @domain %>
 
-<div class="max-w-2xl mx-auto bg-surface rounded-xl shadow-lg p-6 mt-8">
+<div class="max-w-3xl mx-auto bg-surface rounded-xl shadow-lg p-6 mt-8">
   <h2 class="text-lg font-semibold mb-2 text-main">Your Scans</h2>
   <ul class="space-y-4" id="domains">
     <% if @domains.empty? %>

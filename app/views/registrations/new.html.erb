@@ -18,7 +18,7 @@
     </div>
   </div>
   <% if @user.errors.any? %>
-    <div class="bg-danger-surface text-danger-text rounded p-2 mb-2">
+    <div class="bg-danger-surface text-danger-text rounded p-3 mb-4">
       <ul class="list-disc pl-5">
         <% @user.errors.full_messages.each do |msg| %>
           <li><%= msg %></li>

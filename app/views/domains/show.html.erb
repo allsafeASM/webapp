@@ -1,15 +1,13 @@
-<div class="max-w-xl mx-auto bg-surface rounded-xl shadow-lg p-8 mt-8">
-  <h1 class="text-2xl font-bold mb-6 text-main">Domain Scan Details</h1>
-  <div class="mb-6">
-    <p class="mb-2"><span class="font-semibold text-main">Domain:</span> <span class="text-main"><%= @domain.domain %></span></p>
-    <p><span class="font-semibold text-main">Requested at:</span> <span class="text-main"><%= @domain.created_at.to_formatted_s(:long) %></span></p>
+<div class="max-w-3xl mx-auto bg-surface rounded-xl shadow-lg p-6 my-8">
+  <h1 class="text-lg font-semibold mb-4 text-main">Domain Scan Details</h1>
+  <div class="mb-4">
+    <p class="mb-1"><span class="font-semibold text-main">Domain:</span> <span class="text-main"><%= @domain.domain %></span></p>
+    <p class="text-sm text-muted">Requested at: <%= @domain.created_at.to_formatted_s(:long) %></p>
   </div>
+</div>
 
-  <div data-controller="polling" data-polling-interval-value="10000" data-polling-url-value="<%= domain_path(@domain, format: :turbo_stream) %>">
-    <%= turbo_frame_tag "domain_scans", src: domain_path(@domain, format: :turbo_stream), data: { polling_target: "frame" } do %>
-      <%= render partial: "scans_list", locals: { domain: @domain } %>
-    <% end %>
-  </div>
-
-  <%= link_to 'Back to domains list', root_url, class: 'inline-block cursor-pointer px-6 py-2 rounded-lg bg-blue-600 text-main font-semibold shadow hover:bg-blue-700 transition mt-6' %>
+<div data-controller="polling" data-polling-interval-value="10000" data-polling-url-value="<%= domain_path(@domain, format: :turbo_stream) %>" class="mx-auto max-w-3xl">
+  <%= turbo_frame_tag "domain_scans", src: domain_path(@domain, format: :turbo_stream), data: { polling_target: "frame" } do %>
+    <%= render partial: "scans_list", locals: { domain: @domain } %>
+  <% end %>
 </div>

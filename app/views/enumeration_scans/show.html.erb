@@ -1,0 +1,50 @@
+<div class="max-w-2xl mx-auto bg-surface rounded-xl shadow-lg p-6 mt-8">
+  <h2 class="text-xl font-bold text-main mb-4">Enumeration Scan Details</h2>
+  <div class="mb-4">
+    <span class="text-sm font-semibold px-2 py-1 rounded-full
+      <%= 'bg-success-surface text-success-text' if @scan.status == 'completed' %>
+      <%= 'bg-warning-surface text-warning-text' if @scan.status == 'running' || @scan.status == 'pending' %>
+      <%= 'bg-danger-surface text-danger-text' if @scan.status == 'failed' %>
+    ">
+      <%= @scan.status&.capitalize %>
+    </span>
+    <p class="mt-2"><span class="font-semibold">Requested at:</span> <%= @scan.created_at.to_formatted_s(:long) %></p>
+    <% if @scan.status == 'failed' && @scan.failure_reason.present? %>
+      <p class="text-danger-text"><span class="font-semibold">Reason:</span> <%= @scan.failure_reason %></p>
+    <% end %>
+    <p><span class="font-semibold">Assets Found:</span> <%= @scan.total_assets || 0 %></p>
+    <p><span class="font-semibold">Completed:</span> <%= @scan.completed_at&.to_formatted_s(:long) || 'N/A' %></p>
+  </div>
+  <h3 class="text-lg font-semibold text-main mb-2">Results</h3>
+  <% if @results.any? %>
+    <ul class="space-y-2">
+      <% @results.each do |result| %>
+        <li class="bg-background p-3 rounded">
+          <div>
+            <span class="font-semibold">Name:</span> <%= result.name %>
+          </div>
+          <div>
+            <span class="font-semibold">IP:</span> <%= result.ip %>
+          </div>
+          <div>
+            <span class="font-semibold">Port:</span> <%= result.port %>
+          </div>
+          <div>
+            <span class="font-semibold">Webserver:</span> <%= result.webserver %>
+          </div>
+          <div>
+            <span class="font-semibold">Title:</span> <%= result.title %>
+          </div>
+          <div>
+            <span class="font-semibold">Status Code:</span> <%= result.status_code %>
+          </div>
+          <div>
+            <span class="font-semibold">URL:</span> <%= result.url %>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <div class="text-muted">No results yet.</div>
+  <% end %>
+</div>
