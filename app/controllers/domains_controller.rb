@@ -22,7 +22,6 @@ class DomainsController < ApplicationController
       if @domain.save
         format.turbo_stream # renders create.turbo_stream.erb
       else
-        format.turbo_stream { render :create_failure, status: :unprocessable_entity }
         format.html { render :index, status: :unprocessable_entity }
       end
     end
@@ -45,12 +44,14 @@ class DomainsController < ApplicationController
       status: "pending"
     )
 
-    if enum_scan.save && vuln_scan.save
-      # Trigger unified API request
-      notify_api_about_scan(enum_scan.id, vuln_scan.id)
-      redirect_to domain_path(@domain), notice: "Security scan initiated successfully."
-    else
-      redirect_to domain_path(@domain), alert: "Failed to initiate security scan."
+    respond_to do |format|
+      if enum_scan.save && vuln_scan.save
+        # Trigger unified API request
+        notify_api_about_scan(enum_scan.id, vuln_scan.id)
+        format.turbo_stream
+      else
+        format.html { render :show, status: :unprocessable_entity }
+      end
     end
   end
 

@@ -6,6 +6,8 @@ class EnumerationScan < ApplicationRecord
 
   before_validation :set_user_from_domain, on: :create
 
+  broadcasts_to :domain
+
   private
 
   def set_user_from_domain

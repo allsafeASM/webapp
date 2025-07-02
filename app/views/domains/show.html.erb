@@ -1,3 +1,4 @@
+<%= turbo_stream_from @domain %>
 <div class="max-w-3xl mx-auto bg-surface rounded-xl shadow-lg p-6 my-8">
   <div class="flex justify-between items-center mb-4">
     <h1 class="text-lg font-semibold text-main">Domain Details</h1>
@@ -9,7 +10,7 @@
     <p class="mb-1"><span class="text-main text-2xl font-bold"><%= @domain.domain %></span></p>
     <p class="text-sm text-muted">Added on: <%= @domain.created_at.to_formatted_s(:long) %></p>
   </div>
-  <%= link_to 'Back to assets', root_url, class: 'text-main font-semibold hover:underline' %>
+  <%= link_to 'Back to asset inventory', root_url, class: 'text-main font-semibold hover:underline' %>
 </div>
 
 <div data-controller="polling" data-polling-interval-value="10000" data-polling-url-value="<%= domain_path(@domain, format: :turbo_stream) %>" class="mx-auto max-w-3xl">

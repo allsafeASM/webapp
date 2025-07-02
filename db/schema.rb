@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_30_201400) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_02_201820) do
   create_schema "auth"
   create_schema "extensions"
   create_schema "graphql"
@@ -164,12 +164,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_30_201400) do
   end
 
   create_table "vulnerability_scan_results", force: :cascade do |t|
-    t.jsonb "vuln_data"
     t.string "severity"
     t.string "host"
     t.bigint "vulnerability_scan_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "name", null: false
+    t.jsonb "reference"
+    t.text "description", null: false
+    t.string "matched_at"
+    t.string "type", null: false
+    t.text "request"
+    t.text "response"
+    t.string "template", null: false
+    t.string "cve_id"
+    t.decimal "cvss_score"
     t.index ["vulnerability_scan_id"], name: "index_vulnerability_scan_results_on_vulnerability_scan_id"
   end
 

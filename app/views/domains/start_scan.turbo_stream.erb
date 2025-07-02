@@ -1,0 +1,3 @@
+<%= turbo_stream.update "domain_scans" do %>
+  <%= render partial: "scans_list", locals: { domain: @domain } %>
+<% end %>
