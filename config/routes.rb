@@ -7,6 +7,9 @@ Rails.application.routes.draw do
   resource :account, only: [ :show ]
   resources :identities, only: [ :destroy ]
   resources :domains do
+    member do
+      post :start_scan
+    end
     resources :enumeration_scans, only: [ :show ]
     resources :vulnerability_scans, only: [ :show ]
   end

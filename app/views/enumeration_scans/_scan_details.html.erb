@@ -1,0 +1,54 @@
+<div class="bg-surface rounded-xl shadow-lg p-6 mt-8">
+  <h1 class="text-lg font-semibold text-main mb-4">Enumeration Scan Details</h1>
+  <div class="mb-4">
+    <span class="text-sm font-semibold px-2 py-1 rounded-full
+      <%= 'bg-success-surface text-success-text' if scan.status == 'completed' %>
+      <%= 'bg-warning-surface text-warning-text' if scan.status == 'running' || scan.status == 'pending' %>
+      <%= 'bg-danger-surface text-danger-text' if scan.status == 'failed' %>
+    ">
+      <%= scan.status&.capitalize %>
+    </span>
+    <p class="mt-2 text-sm text-muted"><span class="font-semibold">Requested at:</span> <%= scan.created_at.to_formatted_s(:long) %></p>
+    <% if scan.status == 'failed' && scan.failure_reason.present? %>
+      <p class="text-danger-text text-sm"><span class="font-semibold">Reason:</span> <%= scan.failure_reason %></p>
+    <% end %>
+    <p class="text-sm text-muted"><span class="font-semibold">Assets Found:</span> <%= scan.total_assets || 0 %></p>
+    <p class="text-sm text-muted"><span class="font-semibold">Completed:</span> <%= scan.completed_at&.to_formatted_s(:long) || 'N/A' %></p>
+  </div>
+  <%= link_to 'Back to asset', domain_path(@domain), data: { turbo_frame: "_top" }, class: 'text-main font-semibold hover:underline' %>
+</div>
+
+<div class="bg-surface rounded-xl shadow-lg p-6 mt-8">
+  <h3 class="text-lg font-semibold text-main mb-2">Results</h3>
+  <% if results.any? %>
+    <ul class="space-y-2">
+      <% results.each do |result| %>
+        <li class="bg-background p-3 rounded">
+          <div>
+            <span class="font-semibold text-sm text-muted">Name:</span> <span class="text-sm text-main"><%= result.name %></span>
+          </div>
+          <div>
+            <span class="font-semibold text-sm text-muted">IP:</span> <span class="text-sm text-main"><%= result.ip %></span>
+          </div>
+          <div>
+            <span class="font-semibold text-sm text-muted">Port:</span> <span class="text-sm text-main"><%= result.port %></span>
+          </div>
+          <div>
+            <span class="font-semibold text-sm text-muted">Webserver:</span> <span class="text-sm text-main"><%= result.webserver %></span>
+          </div>
+          <div>
+            <span class="font-semibold text-sm text-muted">Title:</span> <span class="text-sm text-main"><%= result.title %></span>
+          </div>
+          <div>
+            <span class="font-semibold text-sm text-muted">Status Code:</span> <span class="text-sm text-main"><%= result.status_code %></span>
+          </div>
+          <div>
+            <span class="font-semibold text-sm text-muted">URL:</span> <span class="text-sm text-main"><%= result.url %></span>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <div class="text-muted">No results yet.</div>
+  <% end %>
+</div>

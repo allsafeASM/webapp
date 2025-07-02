@@ -2,7 +2,10 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["frame"]
-  static values = { interval: { type: Number, default: 10000 } }
+  static values = {
+    interval: { type: Number, default: 10000 },
+    url: String
+  }
 
   connect() {
     this.startPolling()
@@ -18,6 +21,9 @@ export default class extends Controller {
       // Turbo adds the `busy` attribute during a network request.
       // We only trigger a reload if the frame is not currently busy.
       if (!this.frameTarget.hasAttribute("busy")) {
+        if (this.hasUrlValue) {
+          this.frameTarget.src = this.urlValue
+        }
         this.frameTarget.reload()
       }
     }, this.intervalValue)

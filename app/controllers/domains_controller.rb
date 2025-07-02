@@ -1,7 +1,7 @@
 require "httparty"
 
 class DomainsController < ApplicationController
-  before_action :set_domain, only: [ :show, :destroy ]
+  before_action :set_domain, only: [ :show, :destroy, :start_scan ]
 
   def index
     @domains = Current.session.user.domains.order(created_at: :desc)
@@ -26,26 +26,32 @@ class DomainsController < ApplicationController
         format.html { render :index, status: :unprocessable_entity }
       end
     end
-    api_key = Rails.application.credentials.dig(:api_key)
-    url = "https://asm-durable-function.azurewebsites.net/api/orchestrators/start_scan?code=#{api_key}"
-    if api_key.present?
-      # Notify the external API about the new scan request
-      Rails.logger.info("Notifying API about new domain: #{@domain.domain}, ID: #{@domain.id}")
-      response = HTTParty.post(
-        url,
-        body: { scan_id: @domain.id, domain: @domain.domain }.to_json,
-        headers: { "Content-Type" => "application/json" }
-      )
-      unless response.success?
-        Rails.logger.error("Failed to notify API about new domain: #{response.body}")
-      end
-    else
-      Rails.logger.warn("API key is not configured, skipping API notification for new domain.")
-    end
   end
 
   def destroy
     @domain.destroy
+  end
+
+  def start_scan
+    # Create enumeration scan
+    enum_scan = @domain.enumeration_scans.build(
+      user: Current.session.user,
+      status: "pending"
+    )
+
+    # Create vulnerability scan
+    vuln_scan = @domain.vulnerability_scans.build(
+      user: Current.session.user,
+      status: "pending"
+    )
+
+    if enum_scan.save && vuln_scan.save
+      # Trigger unified API request
+      notify_api_about_scan(enum_scan.id, vuln_scan.id)
+      redirect_to domain_path(@domain), notice: "Security scan initiated successfully."
+    else
+      redirect_to domain_path(@domain), alert: "Failed to initiate security scan."
+    end
   end
 
   private
@@ -57,5 +63,31 @@ class DomainsController < ApplicationController
 
     def domain_params
       params.require(:domain).permit(:domain)
+    end
+
+    def notify_api_about_scan(enum_scan_id, vuln_scan_id)
+      api_key = Rails.application.credentials.dig(:api_key)
+      url = "https://asm-durable-function.azurewebsites.net/api/orchestrators/start_scan?code=#{api_key}"
+
+      if api_key.present?
+        Rails.logger.info("Notifying API about new scan for domain: #{@domain.domain}")
+        response = HTTParty.post(
+          url,
+          body: {
+            enum_scan_id: enum_scan_id,
+            vuln_scan_id: vuln_scan_id,
+            scan_id: @domain.id,
+            domain: @domain.domain,
+            user_id: Current.session.user.id
+          }.to_json,
+          headers: { "Content-Type" => "application/json" }
+        )
+
+        unless response.success?
+          Rails.logger.error("Failed to notify API about new scan: #{response.body}")
+        end
+      else
+        Rails.logger.warn("API key is not configured, skipping API notification.")
+      end
     end
 end

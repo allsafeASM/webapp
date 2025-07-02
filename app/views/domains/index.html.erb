@@ -2,7 +2,8 @@
 <%= render "form", domain: @domain %>
 
 <div class="max-w-3xl mx-auto bg-surface rounded-xl shadow-lg p-6 mt-8">
-  <h2 class="text-lg font-semibold mb-2 text-main">Your Scans</h2>
+  <h2 class="text-lg font-semibold mb-2 text-main">Your Asset Inventory</h2>
+  <p class="text-muted mb-4">These are your registered domains. Click on a domain to view details or start security scans.</p>
   <ul class="space-y-4" id="domains">
     <% if @domains.empty? %>
       <%= render "no_domains_message" %>

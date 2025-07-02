@@ -7,7 +7,6 @@
         <% enum_scans.each do |scan| %>
           <li class="bg-background p-4 rounded-lg shadow">
             <div class="flex justify-between items-center">
-              <h3 class="text-lg font-bold text-main">Enumeration Scan</h3>
               <span class="text-sm font-semibold px-2 py-1 rounded-full
                 <%= 'bg-success-surface text-success-text' if scan.status == 'completed' %>
                 <%= 'bg-warning-surface text-warning-text' if scan.status == 'running' || scan.status == 'pending' %>
@@ -22,14 +21,13 @@
                 <p class="text-danger-text"><span class="font-semibold">Reason:</span> <%= scan.failure_reason %></p>
               <% end %>
               <p><span class="font-semibold">Assets Found:</span> <%= scan.total_assets || 0 %></p>
-              <p><span class="font-semibold">Completed:</span> <%= scan.completed_at&.to_formatted_s(:long) || 'N/A' %></p>
-              <%= link_to 'View Details', domain_enumeration_scan_path(domain, scan), class: 'inline-block mt-2 px-4 py-1.5 rounded bg-primary text-main font-semibold shadow hover:bg-primary-hover transition' %>
+              <%= link_to 'View Details', domain_enumeration_scan_path(domain, scan), data: { turbo_frame: "_top" }, class: 'inline-block mt-2 px-4 py-1.5 rounded bg-primary text-main font-semibold shadow hover:bg-primary-hover transition' %>
             </div>
           </li>
         <% end %>
       </ul>
     <% else %>
-      <p class="text-muted">No enumeration scans found.</p>
+      <p class="text-muted text-sm">No enumeration scans found.</p>
     <% end %>
   </div>
 
@@ -41,7 +39,6 @@
         <% vuln_scans.each do |scan| %>
           <li class="bg-background p-4 rounded-lg shadow">
             <div class="flex justify-between items-center">
-              <h3 class="text-lg font-bold text-main">Vulnerability Scan</h3>
               <span class="text-sm font-semibold px-2 py-1 rounded-full
                 <%= 'bg-success-surface text-success-text' if scan.status == 'completed' %>
                 <%= 'bg-warning-surface text-warning-text' if scan.status == 'running' || scan.status == 'pending' %>
@@ -59,14 +56,13 @@
               <% if scan.severity.present? %>
                 <p><span class="font-semibold">Severity:</span> <%= scan.severity %></p>
               <% end %>
-              <p><span class="font-semibold">Completed:</span> <%= scan.completed_at&.to_formatted_s(:long) || 'N/A' %></p>
-              <%= link_to 'View Details', domain_vulnerability_scan_path(domain, scan), class: 'inline-block mt-2 px-4 py-1.5 rounded bg-primary text-main font-semibold shadow hover:bg-primary-hover transition' %>
+              <%= link_to 'View Details', domain_vulnerability_scan_path(domain, scan), data: { turbo_frame: "_top" }, class: 'inline-block mt-2 px-4 py-1.5 rounded bg-primary text-main font-semibold shadow hover:bg-primary-hover transition' %>
             </div>
           </li>
         <% end %>
       </ul>
     <% else %>
-      <p class="text-muted">No vulnerability scans found.</p>
+      <p class="text-muted text-sm">No vulnerability scans found.</p>
     <% end %>
   </div>
 </div>

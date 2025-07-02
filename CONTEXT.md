@@ -17,9 +17,9 @@ AllSafeASM is a cloud-based, AI-enhanced Attack Surface Management platform. The
 ## Development
 
 - **Account Page:** User profile management, password change, social account linking. A user is only represented by email if he did not link with (github/google). If he did link his social accounts, his image and name will be presented. Otherwise, a user can't upload an image or add his name. He only achieves this by social account linking.
-- **Request Scan Page:** This is the root URL, It has a input bar where the user enters the domain to scan, also has a list of scans associated with the user and their status. Also has CRUD for domains.
-- **Scan Page:** When a user clicks on a specific scan in the request scan page, it renders an overview of the specific scan status and results.
-- **Results Visualization Page:** Has details of vulnerability/enumeration scans, and results visualization, with the integrated LLM chatbot.
+- **Assets Page:** This is the root URL, It has a input bar where the user enters the domain to be added to his assets, also has a list of assets associated with the user. Also has CRUD for domains.
+- **Scan Page:** When a user clicks on a specific asset (domain) in the Assets Page, it renders an overview of the specific asset, a button in initialize a scan, and a list of vulnerability/enumeration scans associated with the asset.
+- **Results Visualization Page:** Clicking on a specific scan in the Scan Page renders a route that has details of the specific vulnerability/enumeration scan, and results visualization, with the integrated LLM chatbot.
 - **Integration:** Connect with Go-based scanning microservice for automated scans.
 - **Notifications:** Web push/email notifications for scan results and security alerts.
 

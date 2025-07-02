@@ -4,6 +4,11 @@ class EnumerationScansController < ApplicationController
 
   def show
     @results = @scan.enumeration_scan_results
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream { render "show", locals: { scan: @scan, results: @results } }
+    end
   end
 
   private
