@@ -1,3 +1,18 @@
 <%= turbo_stream.update dom_id(scan) do %>
   <%= render partial: "scan_details", locals: { scan: scan, results: results } %>
 <% end %>
+
+<%= turbo_stream.update dom_id(scan, :ai_analysis_button_container) do %>
+  <%= render partial: "ai_analysis_button", locals: { scan: scan, domain: @domain } %>
+<% end %>
+
+<%= turbo_stream.replace "polling_container_enumeration_scan_#{scan.id}" do %>
+  <div data-controller="polling"
+       data-polling-interval-value="5000"
+       data-polling-url-value="<%= domain_enumeration_scan_path(scan.domain, scan, format: :turbo_stream) %>"
+       data-polling-enabled-value="<%= scan.status&.downcase != 'completed' %>">
+    <%= turbo_frame_tag dom_id(scan), data: { polling_target: "frame" } do %>
+      <%= render partial: "scan_details", locals: { scan: scan, results: results } %>
+    <% end %>
+  </div>
+<% end %>

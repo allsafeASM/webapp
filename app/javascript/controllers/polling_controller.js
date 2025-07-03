@@ -4,15 +4,24 @@ export default class extends Controller {
   static targets = ["frame"]
   static values = {
     interval: { type: Number, default: 10000 },
-    url: String
+    url: String,
+    enabled: { type: Boolean, default: true }
   }
 
   connect() {
-    this.startPolling()
+    if (this.enabledValue) {
+      this.startPolling()
+    }
   }
 
   disconnect() {
     this.stopPolling()
+  }
+
+  enabledValueChanged() {
+    if (!this.enabledValue) {
+      this.stopPolling()
+    }
   }
 
   startPolling() {

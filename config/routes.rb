@@ -10,8 +10,13 @@ Rails.application.routes.draw do
     member do
       post :start_scan
     end
-    resources :enumeration_scans, only: [ :show ]
-    resources :vulnerability_scans, only: [ :show ]
+
+    resources :enumeration_scans, only: [ :show ] do
+      resource :ai_analysis, only: [ :create ], controller: "ai_analyses"
+    end
+    resources :vulnerability_scans, only: [ :show ] do
+      resource :ai_analysis, only: [ :create ], controller: "ai_analyses"
+    end
   end
 
   # OmniAuth routes

@@ -1,16 +1,20 @@
 # config/initializers/ruby_llm.rb
+require "ruby_llm"
+
 RubyLLM.configure do |config|
-  # Point to the local Ollama server's OpenAI-compatible endpoint.
-  # The '/v1' path is crucial for this compatibility mode. It instructs RubyLLM
-  # to use the standard OpenAI protocol for communication.
-  config.openai_api_base = ENV.fetch("OLLAMA_API_BASE", "http://localhost:11434/v1")
+  # 1. Point to the Azure endpoint URL. This is the crucial setting for Azure integration.
+  #    It's recommended to use environment variables for flexibility and security.
+  config.openai_api_base = Rails.application.credentials.dig(:azure_openai, :endpoint)
 
-  # For a standard Ollama setup, an API key is not required. However, the gem's
-  # configuration may expect a value to be present. Providing a non-empty string
-  # like 'ollama' satisfies this requirement without compromising security.
-  config.openai_api_key = ENV.fetch("OLLAMA_API_KEY", "ollama")
+  # 2. Provide the API key for your Azure resource.
+  config.openai_api_key = Rails.application.credentials.dig(:azure_openai, :api_key)
 
-  # Set a generous request timeout to accommodate potentially slow model
-  # generation on local hardware, preventing premature request termination.
+  # 3. Configure resilience settings for production-grade reliability.
+  #    Set a generous timeout for potentially long-running LLM requests.
   config.request_timeout = 180 # seconds
+
+  #    Configure automatic retries with exponential backoff for transient errors.
+  config.max_retries = 3
+  config.retry_interval = 0.2 # Start with a 200ms delay
+  config.retry_backoff_factor = 2 # Double the delay for each subsequent retry (0.2s, 0.4s, 0.8s)
 end
