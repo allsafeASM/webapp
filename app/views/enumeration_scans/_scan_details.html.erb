@@ -1,54 +1,74 @@
 <div class="bg-surface rounded-xl shadow-lg p-6 mt-8">
-  <h1 class="text-lg font-semibold text-main mb-4">Enumeration Scan Details</h1>
-  <div class="mb-4">
-    <span class="text-sm font-semibold px-2 py-1 rounded-full
-      <%= 'bg-success-surface text-success-text' if scan.status == 'completed' %>
-      <%= 'bg-warning-surface text-warning-text' if scan.status == 'running' || scan.status == 'pending' %>
-      <%= 'bg-danger-surface text-danger-text' if scan.status == 'failed' %>
-    ">
-      <%= scan.status&.capitalize %>
+  <div class="flex justify-between items-start mb-4">
+    <div>
+      <h1 class="text-lg font-semibold text-main">Enumeration Scan Details</h1>
+      <p class="text-sm text-muted">Overview of the enumeration scan status and findings.</p>
+    </div>
+    <%
+      status_class = if scan.status&.downcase == 'completed'
+                       'bg-success-surface text-success-text'
+                     elsif ['running', 'pending'].include?(scan.status&.downcase)
+                       'bg-warning-surface text-warning-text'
+                     elsif scan.status&.downcase == 'failed'
+                       'bg-danger-surface text-danger-text'
+                     else
+                       'bg-surface text-muted'
+                     end
+    %>
+    <span class="text-sm font-semibold px-2 py-1 rounded-full whitespace-nowrap <%= status_class %>">
+      <%= scan.status&.capitalize || 'Unknown' %>
     </span>
-    <p class="mt-2 text-sm text-muted"><span class="font-semibold">Requested at:</span> <%= scan.created_at.to_formatted_s(:long) %></p>
-    <% if scan.status == 'failed' && scan.failure_reason.present? %>
-      <p class="text-danger-text text-sm"><span class="font-semibold">Reason:</span> <%= scan.failure_reason %></p>
-    <% end %>
-    <p class="text-sm text-muted"><span class="font-semibold">Assets Found:</span> <%= scan.total_assets || 0 %></p>
-    <p class="text-sm text-muted"><span class="font-semibold">Completed:</span> <%= scan.completed_at&.to_formatted_s(:long) || 'N/A' %></p>
   </div>
-  <%= link_to 'Back to asset', domain_path(@domain), data: { turbo_frame: "_top" }, class: 'text-main font-semibold hover:underline' %>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm border-t border-border/20 pt-4">
+    <p class="text-muted"><span class="font-semibold text-main">Requested:</span> <%= scan.created_at.to_formatted_s(:long) %></p>
+    <p class="text-muted"><span class="font-semibold text-main">Assets Found:</span> <%= scan.total_assets || 0 %></p>
+    <% if scan.status&.downcase == 'completed' %>
+      <p class="text-muted"><span class="font-semibold text-main">Completed at:</span> <%= scan.completed_at&.to_formatted_s(:long) %></p>
+    <% end %>
+    <% if scan.status&.downcase == 'failed' && scan.failure_reason.present? %>
+      <p class="text-danger-text col-span-full"><span class="font-semibold">Reason:</span> <%= scan.failure_reason %></p>
+    <% end %>
+  </div>
+
+  <div class="mt-6 text-right">
+    <%= link_to 'Back to Asset', domain_path(@domain), data: { turbo_frame: "_top" }, class: 'text-main font-semibold hover:underline text-sm' %>
+  </div>
 </div>
 
 <div class="bg-surface rounded-xl shadow-lg p-6 mt-8">
   <h3 class="text-lg font-semibold text-main mb-2">Results</h3>
   <% if results.any? %>
-    <ul class="space-y-2">
+    <ul class="space-y-4">
       <% results.each do |result| %>
-        <li class="bg-background p-3 rounded">
-          <div>
-            <span class="font-semibold text-sm text-muted">Name:</span> <span class="text-sm text-main"><%= result.name %></span>
-          </div>
-          <div>
-            <span class="font-semibold text-sm text-muted">IP:</span> <span class="text-sm text-main"><%= result.ip %></span>
-          </div>
-          <div>
-            <span class="font-semibold text-sm text-muted">Port:</span> <span class="text-sm text-main"><%= result.port %></span>
-          </div>
-          <div>
-            <span class="font-semibold text-sm text-muted">Webserver:</span> <span class="text-sm text-main"><%= result.webserver %></span>
-          </div>
-          <div>
-            <span class="font-semibold text-sm text-muted">Title:</span> <span class="text-sm text-main"><%= result.title %></span>
-          </div>
-          <div>
-            <span class="font-semibold text-sm text-muted">Status Code:</span> <span class="text-sm text-main"><%= result.status_code %></span>
-          </div>
-          <div>
-            <span class="font-semibold text-sm text-muted">URL:</span> <span class="text-sm text-main"><%= result.url %></span>
+        <li class="bg-background p-4 rounded-lg shadow-sm">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 text-sm">
+            <div>
+              <span class="font-semibold text-muted">Name:</span> <span class="text-main"><%= result.name %></span>
+            </div>
+            <div>
+              <span class="font-semibold text-muted">URL:</span> <span class="text-main break-all"><%= result.url %></span>
+            </div>
+            <div>
+              <span class="font-semibold text-muted">IP:</span> <span class="text-main"><%= result.ip %></span>
+            </div>
+            <div>
+              <span class="font-semibold text-muted">Port:</span> <span class="text-main"><%= result.port %></span>
+            </div>
+            <div>
+              <span class="font-semibold text-muted">Status Code:</span> <span class="text-main"><%= result.status_code %></span>
+            </div>
+            <div>
+              <span class="font-semibold text-muted">Title:</span> <span class="text-main"><%= result.title %></span>
+            </div>
+            <div class="col-span-full">
+              <span class="font-semibold text-muted">Webserver:</span> <span class="text-main"><%= result.webserver %></span>
+            </div>
           </div>
         </li>
       <% end %>
     </ul>
   <% else %>
-    <div class="text-muted">No results yet.</div>
+    <div class="text-muted text-sm">No results yet. The scan might be in progress or no assets were found.</div>
   <% end %>
 </div>

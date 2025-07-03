@@ -24,9 +24,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_02_201820) do
   enable_extension "extensions.pg_stat_statements"
   enable_extension "extensions.pgcrypto"
   enable_extension "extensions.uuid-ossp"
-  enable_extension "graphql.pg_graphql"
   enable_extension "pg_catalog.plpgsql"
-  enable_extension "vault.supabase_vault"
 
   create_table "dns_records", force: :cascade do |t|
     t.text "cname_record"
@@ -173,7 +171,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_02_201820) do
     t.jsonb "reference"
     t.text "description", null: false
     t.string "matched_at"
-    t.string "type", null: false
+    t.string "vuln_type", null: false
     t.text "request"
     t.text "response"
     t.string "template", null: false
