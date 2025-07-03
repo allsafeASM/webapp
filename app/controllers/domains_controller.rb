@@ -47,7 +47,7 @@ class DomainsController < ApplicationController
     respond_to do |format|
       if enum_scan.save && vuln_scan.save
         # Trigger unified API request
-        # notify_api_about_scan(enum_scan.id, vuln_scan.id)
+        notify_api_about_scan(enum_scan.id, vuln_scan.id)
         format.turbo_stream
       else
         format.html { render :show, status: :unprocessable_entity }
