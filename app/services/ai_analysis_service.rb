@@ -18,13 +18,7 @@ class AiAnalysisService
 
   def initialize(page_data)
     @page_data = page_data
-    # Initialize the RubyLLM client, configured to speak to our Azure deployment.
-    # This is the only place in the application that needs to know these specifics.
-    @client = RubyLLM.chat(
-      model: Rails.application.credentials.dig(:azure_openai, :deployment_name),
-      provider: :openai,
-      assume_model_exists: true
-    )
+    @client = OpenAI::Client.new
   end
 
   def build_prompt
@@ -48,8 +42,18 @@ class AiAnalysisService
   def request_analysis(prompt)
     # The actual API call and its error handling are isolated here.
     Rails.logger.info "Requesting analysis from LLM."
-    response = client.ask(prompt)
+    response = client.chat(
+      parameters: {
+        model: Rails.application.credentials.dig(:azure_openai, :deployment_name),
+        messages: [ { role: "user", content: prompt } ],
+        max_tokens: 1000,
+        temperature: 0.7
+      }
+    )
     Rails.logger.info "Received response from LLM."
-    response
+    response.dig("choices", 0, "message", "content")
+  rescue => e
+    Rails.logger.error "Error requesting analysis: #{e.message}"
+    raise
   end
 end

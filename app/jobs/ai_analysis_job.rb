@@ -11,10 +11,14 @@ class AiAnalysisJob < ApplicationJob
     # Call the service object to perform the actual work
     response = AiAnalysisService.call(scan_data)
     Rails.logger.info "AiAnalysisService returned a response for scan_id: #{scan_id}"
-    Rails.logger.debug "AI service response content: #{response.content}"
+    Rails.logger.debug "AI service response content: #{response}"
+
+    # Clean the response to remove markdown code blocks if present
+    cleaned_response = clean_json_response(response)
+    Rails.logger.debug "Cleaned AI response: #{cleaned_response}"
 
     # Parse the JSON response to get the summary
-    parsed_response = JSON.parse(response.content)
+    parsed_response = JSON.parse(cleaned_response)
     summary = parsed_response["summary"]
 
     # Broadcast the successful result to the UI via Turbo Streams
@@ -35,5 +39,19 @@ class AiAnalysisJob < ApplicationJob
       locals: { message: "An error occurred during AI analysis. Please try again." }
     )
     Rails.logger.error "AiAnalysisJob failed: #{e.message}"
+  end
+
+  private
+
+  def clean_json_response(response)
+    # Remove markdown code blocks if present
+    cleaned = response.strip
+    if cleaned.start_with?("```json")
+      cleaned = cleaned.gsub(/\A```json\n?/, "")
+    elsif cleaned.start_with?("```")
+      cleaned = cleaned.gsub(/\A```[a-zA-Z]*\n?/, "")
+    end
+    cleaned = cleaned.gsub(/\n?```\z/, "")
+    cleaned.strip
   end
 end

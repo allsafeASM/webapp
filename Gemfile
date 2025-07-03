@@ -71,5 +71,5 @@ end
 gem "dotenv-rails"
 gem "tailwindcss-ruby"
 gem "tailwindcss-rails"
-gem "ruby_llm"
 gem "httparty"
+gem "ruby-openai"
