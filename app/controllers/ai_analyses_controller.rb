@@ -1,4 +1,6 @@
 class AiAnalysesController < ApplicationController
+  include ActionView::RecordIdentifier
+
   before_action :set_domain
   before_action :set_scan
 
@@ -24,11 +26,14 @@ class AiAnalysesController < ApplicationController
     # Respond immediately with a Turbo Stream to update the UI with a loading state
     respond_to do |format|
       format.turbo_stream do
-        render turbo_stream: turbo_stream.update(
-          analysis_target_id,
-          partial: "shared/ai_analysis_loading",
-          locals: { message: "🤖 AI Analysis in progress... This may take a few moments." }
-        )
+        render turbo_stream: [
+          turbo_stream.update(
+            analysis_target_id,
+            partial: "shared/ai_analysis_loading",
+            locals: { message: "🤖 AI Analysis in progress... This may take a few moments." }
+          ),
+          turbo_stream.remove(dom_id(@scan, :ai_analysis_button_container))
+        ]
       end
     end
   end
