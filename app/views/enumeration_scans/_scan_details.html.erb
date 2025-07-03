@@ -12,15 +12,18 @@
                      elsif scan.status&.downcase == 'failed'
                        'bg-danger-surface text-danger-text'
                      else
-                       'bg-surface text-muted'
+                       'bg-background text-main'
                      end
     %>
-    <span class="text-sm font-semibold px-2 py-1 rounded-full whitespace-nowrap <%= status_class %>">
-      <%= scan.status&.capitalize || 'Unknown' %>
-    </span>
+    <div class="flex items-center space-x-2">
+      <%= render 'shared/scan_status_icon', status: scan.status %>
+      <span class="text-sm font-semibold px-3 py-1 rounded-full whitespace-nowrap <%= status_class %>">
+        <%= scan.status&.capitalize %>
+      </span>
+    </div>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm border-t border-border/20 pt-4">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm border-t border-border pt-4">
     <p class="text-muted"><span class="font-semibold text-main">Requested:</span> <%= scan.created_at.to_formatted_s(:long) %></p>
     <p class="text-muted"><span class="font-semibold text-main">Assets Found:</span> <%= scan.total_assets || 0 %></p>
     <% if scan.status&.downcase == 'completed' %>
