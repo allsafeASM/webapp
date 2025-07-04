@@ -22,6 +22,7 @@ class DomainsController < ApplicationController
       if @domain.save
         format.turbo_stream # renders create.turbo_stream.erb
       else
+        @domains = Current.session.user.domains.order(created_at: :desc)
         format.html { render :index, status: :unprocessable_entity }
       end
     end

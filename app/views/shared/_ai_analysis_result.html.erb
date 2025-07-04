@@ -1,25 +1,93 @@
-<div class="bg-success-surface/10 border border-success-text/20 rounded-lg p-4 mt-4">
-  <div class="flex items-start space-x-3">
+<div class="bg-surface rounded-xl p-6 mt-6 shadow-lg">
+  <div class="flex items-start space-x-4">
     <div class="flex-shrink-0">
-      <svg class="w-6 h-6 text-low" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-      </svg>
+      <div class="w-10 h-10 bg-gradient-to-r from-primary to-primary-hover rounded-full flex items-center justify-center">
+        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+        </svg>
+      </div>
     </div>
     <div class="flex-1">
-      <h4 class="text-sm font-semibold text-low mb-3">🤖 AI Analysis Results</h4>
-      <div class="text-sm text-main">
-        <% if result.is_a?(Array) %>
-          <ul class="space-y-2">
-            <% result.each do |item| %>
-              <li class="flex items-start space-x-2">
-                <span class="text-low font-bold mt-1">•</span>
-                <span class="flex-1"><%= item %></span>
-              </li>
-            <% end %>
-          </ul>
+      <div class="flex items-center space-x-2 mb-4">
+        <h4 class="text-lg font-bold text-main">🤖 AI Security Analysis</h4>
+        <span class="bg-success-surface text-success-text text-xs font-medium px-2.5 py-0.5 rounded-full">Complete</span>
+      </div>
+      
+      <div class="space-y-6">
+        <% if result.is_a?(Hash) %>
+          <% if result["summary"] %>
+            <div class="bg-background rounded-lg p-4 border-l-4 border-primary shadow-sm">
+              <div class="flex items-center space-x-2 mb-3">
+                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <h5 class="font-semibold text-main">Executive Summary</h5>
+              </div>
+              <p class="text-muted leading-relaxed"><%= result["summary"] %></p>
+            </div>
+          <% end %>
+          
+          <% if result["immediate_actions"]&.any? %>
+            <div class="bg-background rounded-lg p-4 border-l-4 border-danger shadow-sm">
+              <div class="flex items-center space-x-2 mb-3">
+                <svg class="w-5 h-5 text-danger" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z"></path>
+                </svg>
+                <h5 class="font-semibold text-main">Critical Actions Required</h5>
+                <span class="bg-danger-surface text-danger-text text-xs font-medium px-2 py-0.5 rounded-full">High Priority</span>
+              </div>
+              <ul class="space-y-3">
+                <% result["immediate_actions"].each do |action| %>
+                  <li class="flex items-start space-x-3">
+                    <div class="flex-shrink-0 w-6 h-6 bg-danger-surface rounded-full flex items-center justify-center mt-0.5">
+                      <span class="text-danger-text font-bold text-sm">!</span>
+                    </div>
+                    <span class="flex-1 text-muted leading-relaxed"><%= action %></span>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+          
+          <% if result["recommendations"]&.any? %>
+            <div class="bg-background rounded-lg p-4 border-l-4 border-low shadow-sm">
+              <div class="flex items-center space-x-2 mb-3">
+                <svg class="w-5 h-5 text-low" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <h5 class="font-semibold text-main">Security Recommendations</h5>
+                <span class="bg-success-surface text-success-text text-xs font-medium px-2 py-0.5 rounded-full">Best Practices</span>
+              </div>
+              <ul class="space-y-3">
+                <% result["recommendations"].each do |recommendation| %>
+                  <li class="flex items-start space-x-3">
+                    <div class="flex-shrink-0 w-6 h-6 bg-success-surface rounded-full flex items-center justify-center mt-0.5">
+                      <span class="text-success-text font-bold text-sm">✓</span>
+                    </div>
+                    <span class="flex-1 text-muted leading-relaxed"><%= recommendation %></span>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+        <% elsif result.is_a?(Array) %>
+          <div class="bg-background rounded-lg p-4 border-l-4 border-primary shadow-sm">
+            <ul class="space-y-3">
+              <% result.each do |item| %>
+                <li class="flex items-start space-x-3">
+                  <div class="flex-shrink-0 w-6 h-6 bg-surface rounded-full flex items-center justify-center mt-0.5">
+                    <span class="text-primary font-bold text-sm">•</span>
+                  </div>
+                  <span class="flex-1 text-muted leading-relaxed"><%= item %></span>
+                </li>
+              <% end %>
+            </ul>
+          </div>
         <% else %>
-          <div class="prose prose-sm max-w-none">
-            <%= simple_format(result) %>
+          <div class="bg-background rounded-lg p-4 border-l-4 border-border shadow-sm">
+            <div class="prose prose-sm max-w-none text-muted">
+              <%= simple_format(result) %>
+            </div>
           </div>
         <% end %>
       </div>

@@ -28,14 +28,15 @@ class AiAnalysisService
     <<~PROMPT
     You are an expert cybersecurity specialist. Analyze the following data and provide a summary.
     Users are generally looking for insights into vulnerabilities, security issues, or potential improvements based on the provided data.
-    Users are not looking for detailed technical explanations, but rather actionable insights or summaries that can guide their next steps.
-    Users may not be familiar with technical jargon, so responses should be clear and concise.
-    Use bullet points for clarity and focus on the most critical issues.
+    Responses should be clear and concise.
     Data:
     """
     #{page_data.to_json}
     """
-    Respond with a JSON object containing a 'summary' key.
+    Respond with a JSON object containing
+    - a 'summary' key, this contains a short summary of the types of vulnerabilities or security issues identified in the data.
+    - an 'immediate_actions' key, this contains a list of immediate actions that can be taken to address the identified impactful vulnerabilities.
+    - a 'recommendations' key, this contains actionable recommendations for improving security based on the analysis, this will be a list.
     PROMPT
   end
 

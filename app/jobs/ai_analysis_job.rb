@@ -19,7 +19,6 @@ class AiAnalysisJob < ApplicationJob
 
     # Parse the JSON response to get the summary
     parsed_response = JSON.parse(cleaned_response)
-    summary = parsed_response["summary"]
 
     # Broadcast the successful result to the UI via Turbo Streams
     Rails.logger.info "Broadcasting successful AI analysis result for scan_id: #{scan_id}"
@@ -27,7 +26,7 @@ class AiAnalysisJob < ApplicationJob
       "ai_analysis_#{scan_type}_#{scan_id}",
       target: analysis_target_id,
       partial: "shared/ai_analysis_result",
-      locals: { result: summary }
+      locals: { result: parsed_response }
     )
   rescue StandardError => e
     # Handle unexpected errors and broadcast an error state to the UI
