@@ -68,7 +68,7 @@ class DomainsController < ApplicationController
 
     def notify_api_about_scan(enum_scan_id, vuln_scan_id)
       api_key = Rails.application.credentials.dig(:api_key)
-      url = "https://asm-durable-function.azurewebsites.net/api/orchestrators/start_scan?code=#{api_key}"
+      url = "https://asm-function.azurewebsites.net/api/orchestrators/start_scan?code=#{api_key}"
 
       if api_key.present?
         Rails.logger.info("Notifying API about new scan for domain: #{@domain.domain}")
