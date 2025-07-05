@@ -42,35 +42,90 @@
 <div class="bg-surface rounded-xl shadow-lg p-6 mt-8">
   <h3 class="text-lg font-semibold text-main mb-2">Results</h3>
   <% if results.any? %>
-    <ul class="space-y-4">
-      <% results.each do |result| %>
-        <li class="bg-background p-4 rounded-lg shadow-sm">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 text-sm">
-            <div>
-              <span class="font-semibold text-muted">Name:</span> <span class="text-main"><%= result.name %></span>
-            </div>
-            <div>
-              <span class="font-semibold text-muted">URL:</span> <span class="text-main break-all"><%= result.url %></span>
-            </div>
-            <div>
-              <span class="font-semibold text-muted">IP:</span> <span class="text-main"><%= result.ip %></span>
-            </div>
-            <div>
-              <span class="font-semibold text-muted">Port:</span> <span class="text-main"><%= result.port %></span>
-            </div>
-            <div>
-              <span class="font-semibold text-muted">Status Code:</span> <span class="text-main"><%= result.status_code %></span>
-            </div>
-            <div>
-              <span class="font-semibold text-muted">Title:</span> <span class="text-main"><%= result.title %></span>
-            </div>
-            <div class="col-span-full">
-              <span class="font-semibold text-muted">Webserver:</span> <span class="text-main"><%= result.webserver %></span>
-            </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b border-border">
+            <th class="text-left py-3 px-2 font-semibold text-main">Name</th>
+            <th class="text-left py-3 px-2 font-semibold text-main hidden sm:table-cell">IP</th>
+            <th class="text-left py-3 px-2 font-semibold text-main hidden md:table-cell">Port</th>
+            <th class="text-left py-3 px-2 font-semibold text-main hidden lg:table-cell">Status</th>
+            <th class="text-left py-3 px-2 font-semibold text-main">URL</th>
+            <th class="text-left py-3 px-2 font-semibold text-main hidden lg:table-cell">Title</th>
+            <th class="text-left py-3 px-2 font-semibold text-main hidden lg:table-cell">Webserver</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% results.each do |result| %>
+            <tr class="border-b border-border/50 hover:bg-background/50 transition-colors">
+              <td class="py-3 px-2">
+                <div class="text-main font-medium"><%= result.name %></div>
+                <div class="text-muted text-xs mt-1 md:hidden">
+                  IP: <%= result.ip %> | Port: <%= result.port %>
+                </div>
+              </td>
+              <td class="py-3 px-2 text-main hidden md:table-cell">
+                <%= result.ip %>
+              </td>
+              <td class="py-3 px-2 text-main hidden md:table-cell">
+                <%= result.port %>
+              </td>
+              <td class="py-3 px-2 hidden lg:table-cell">
+                <% if result.status_code %>
+                  <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
+                    <%= result.status_code.to_s.start_with?('2') ? 'bg-success-surface text-success-text' : 
+                        result.status_code.to_s.start_with?('3') ? 'bg-warning-surface text-warning-text' :
+                        'bg-danger-surface text-danger-text' %>">
+                    <%= result.status_code %>
+                  </span>
+                <% else %>
+                  <span class="text-muted">-</span>
+                <% end %>
+              </td>
+              <td class="py-3 px-2">
+                <% if result.url.present? %>
+                  <a href="<%= result.url %>" target="_blank" class="text-primary hover:underline break-all">
+                    <%= truncate(result.url, length: 40) %>
+                  </a>
+                  <div class="text-muted text-xs mt-1 lg:hidden">
+                    <% if result.status_code %>
+                      Status: <%= result.status_code %>
+                    <% end %>
+                  </div>
+                <% else %>
+                  <span class="text-muted">-</span>
+                <% end %>
+              </td>
+              <td class="py-3 px-2 text-main hidden lg:table-cell">
+                <%= truncate(result.title, length: 30) if result.title.present? %>
+              </td>
+              <td class="py-3 px-2 text-main hidden lg:table-cell">
+                <%= result.webserver if result.webserver.present? %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- Mobile-only details cards for hidden columns -->
+    <div class="lg:hidden mt-4 space-y-2">
+      <% results.each_with_index do |result, index| %>
+        <details class="bg-background rounded-lg overflow-hidden">
+          <summary class="px-4 py-2 cursor-pointer hover:bg-surface transition-colors text-sm font-medium text-main">
+            View details for <%= result.name %>
+          </summary>
+          <div class="px-4 py-3 border-t border-border/50 space-y-2 text-sm">
+            <% if result.title.present? %>
+              <div><span class="font-semibold text-muted">Title:</span> <span class="text-main"><%= result.title %></span></div>
+            <% end %>
+            <% if result.webserver.present? %>
+              <div><span class="font-semibold text-muted">Webserver:</span> <span class="text-main"><%= result.webserver %></span></div>
+            <% end %>
           </div>
-        </li>
+        </details>
       <% end %>
-    </ul>
+    </div>
   <% else %>
     <div class="text-muted text-sm">No results yet. The scan might be in progress or no assets were found.</div>
   <% end %>
