@@ -1,110 +1,197 @@
-# AllSafeASM - Web Application
+# AllSafeASM Web Application 🚀
 
-AllSafeASM is a cloud-based, AI-enhanced Attack Surface Management solution designed to provide organizations with a streamlined platform for proactive security. This repository contains the primary web application, which serves as the user-facing interface for the entire system.
+[![Ruby on Rails](https://img.shields.io/badge/Rails-8-red?logo=ruby-on-rails)](https://rubyonrails.org/)  
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue?logo=postgresql)](https://www.postgresql.org/)  
 
-This application is responsible for:
+> "Know your attack surface, before the adversary does."
 
--   User account management and authentication.
--   Project and asset organization.
--   Initiating vulnerability scans.
--   Visualizing scan results and security dashboards.
+AllSafeASM is a cloud-native, AI-enhanced **Attack Surface Management (ASM)** platform that empowers security teams to continuously discover, monitor and secure their external assets.  
+This repository contains the **primary web application**—the user-facing interface built with Ruby on Rails 8 and Hotwire.
 
-This project is being developed as a graduation project for the Faculty of Engineering, Port Said University.
+---
 
-## Core Technologies
+## 📚 Table of Contents
+1. [Features](#features)
+2. [Technology Stack](#technology-stack)
+3. [Architecture Overview](#architecture-overview)
+4. [Getting Started](#getting-started)
+   1. [Quick Start (Docker)](#quick-start-docker)
+   2. [Manual Setup](#manual-setup)
+5. [Usage](#usage)
+6. [Roadmap](#roadmap)
+7. [Contributing](#contributing)
+8. [Authors](#authors)
 
-This web application is built with a modern, robust, and efficient technology stack, emphasizing developer productivity and a seamless user experience.
+---
 
--   **Backend:** Ruby on Rails 8
--   **Frontend:** Hotwire (Turbo & Stimulus)
--   **Styling:** Tailwind CSS
--   **Database:** PostgreSQL (hosted on Supabase)
--   **Authentication:** Native Rails 8 authentication with OmniAuth for Google and Github Social Login
-
-## Features
+## ✨ Features
 
 ### Implemented
-
--   Complete User Authentication Flow:
-    -   Secure user registration with email and password.
-    -   Session management (login/logout).
-    -   "Login with Google" via OmniAuth for seamless social login.
-    -   Secure password hashing using bcrypt.
+- 🔐 **User Authentication & Authorization**  
+  - Email & password registration / login  
+  - Social login with **Google** & **GitHub** (OmniAuth)  
+  - Secure password hashing with `bcrypt`
+- 📝 **Profile & Account Management**
 
 ### Upcoming
+- 📦 **Project & Asset Management** (domains)  
+- ⚡️ **Scanner Micro-Service Integration** (Cloud infrastructure on Azure)  
+- 📈 **Real-time Dashboard** with live scan status (Action Cable & Solid Cable)  
+- 📊 **Interactive Vulnerability Visualizations**  
 
--   CRUD functionality for managing security projects and assets (domains, IPs).
--   Integration with the Go-based scanning microservice.
--   Real-time UI updates for scan status (queued, scanning, completed) using Action Cable.
--   An interactive dashboard for visualizing vulnerability data and security posture.
+---
 
-## System Setup & Installation
+## 🛠️ Technology Stack
 
-Follow these steps to get a local development environment running.
+| Layer      | Technology |
+|------------|------------|
+| Backend    | **Ruby on Rails 8** |
+| Frontend   | **Hotwire** (Turbo & Stimulus) |
+| Styling    | **Tailwind CSS** |
+| Database   | **PostgreSQL** (Supabase for development, Azure Database for PostgreSQL in production) |
+| Auth       | Native Rails + **OmniAuth** (Google, GitHub) |
+| Realtime   | **Action Cable** + **Solid Cable** adapter (dev & prod) |
 
-### Prerequisites
+---
 
--   Ruby (version 3.3.0 or later)
--   Rails 8
--   Bundler (`gem install bundler`)
--   PostgreSQL Client Library (`libpq`). Install it via:
-    -   macOS (Homebrew): `brew install libpq`
-    -   Ubuntu/Debian: `sudo apt install libpq-dev`
-    -   Fedora/CentOS: `sudo dnf install libpq-devel`
+## 🏗️ Architecture Overview
 
-### 1. Clone the Repository
+```mermaid
+flowchart TD
+  A[Browser] --> RailsApp[(Rails 8 Web App)]
+
+  RailsApp -- "start_scan API" --> AzureFn[Azure Function]
+  
+  subgraph CloudInfra["Cloud Infra (Azure)"]
+    AzureFn --> ContainerApp[Go Scanner Container App]
+    ContainerApp --> AzureDB[(Azure PostgreSQL)]
+  end
+
+  RailsApp --> Supabase[(Supabase dev DB)]
+  AzureDB --> RailsApp
+```
+
+* **Rails App:** Authenticates users, manages projects/assets and triggers scans by calling the `start_scan` Azure Function, while streaming real-time updates via **Solid Cable**.
+* **Azure Function (`start_scan`):** Kicks off the Go-based scanner running inside Azure Container Apps.
+* **Go Scanner Container App:** Executes enumeration & vulnerability scans and writes progress/results back to the database.
+* **Database:** **Supabase** (development) or **Azure PostgreSQL** (production) stores users, assets, and scan data.
+
+---
+
+## 🚀 Getting Started
+
+### Quick Start (Docker)
+> Ideal if you just want to explore the app without installing Ruby or PostgreSQL locally.
 
 ```bash
-git clone git@github.com:allsafeASM/webapp.git
-cd webapp
+# Clone & launch the stack
+$ git clone https://github.com/AllsafeASM/webapp.git && cd webapp
+$ bin/rails credentials:edit --environment development   # add your secrets (see below)
+$ docker compose up --build
+
+# Visit the app
+# http://localhost:3000
 ```
 
-### 2. Set Up Environment Variables
+### Manual Setup
 
-This project uses the `dotenv-rails` gem to manage environment variables. Copy the example file and fill in your credentials.
+#### 1. Prerequisites
+- **Ruby ≥ 3.3.0** & **Rails 8**
+- **PostgreSQL ≥ 14** client libraries (`libpq`)
+- **Bundler**: `gem install bundler`
 
-Add required credentials to `.env`
-
-```env
-# .env
-
-# --- Supabase Database URLs ---
-# These variables are used to construct the database connection string.
-# Use the details from your Supabase Connection Pooler.
-SUPABASE_HOST=YOUR_HOST
-SUPABASE_PORT=YOUR_PORT
-SUPABASE_USER=YOUR_USER
-SUPABASE_DB_NAME=YOUR_DB_NAME
-SUPABASE_PASSWORD=YOUR_SUPABASE_PASSWORD_HERE
-
-# --- Social Login Credentials ---
-GOOGLE_CLIENT_ID="YOUR_GOOGLE_CLIENT_ID_HERE"
-GOOGLE_CLIENT_SECRET="YOUR_GOOGLE_CLIENT_SECRET_HERE"
-
-GITHUB_CLIENT_ID="YOUR_GITHUB_CLIENT_ID_HERE"
-GITHUB_CLIENT_SECRET="YOUR_GITHUB_CLIENT_SECRET_HERE"
-```
-
-**Important:** The `.env` file is listed in `.gitignore` and should never be committed to source control.
-
-### 3. Install Dependencies
-
+#### 2. Install Dependencies
 ```bash
 bundle install
 ```
 
-### Running the Application
-
-To start the web server, run the following command.
+#### 3. Configure Rails Credentials
+We use **Rails Encrypted Credentials** instead of `.env` files. Run the command below and add the needed keys:
 
 ```bash
-bin/rails s
+bin/rails credentials:edit --environment development
 ```
 
-Open your web browser and navigate to `http://localhost:3000`.
+Sample (`YAML`) structure:
 
-## Project Team
+```yaml
+# config/credentials/development.yml.enc (after editing)
+db_dev:
+  host: "YOUR_HOST"
+  port: 5432
+  user: "YOUR_USER"
+  passwd: "YOUR_PASSWORD"
+  name: "YOUR_DB_NAME"
 
--   Abdelrahman Magdi - `abdomagdi300@gmail.com`
--   Omar Essam - `omar.e.gado@gmail.com`
--   Hazem Osama - `hazemosama681@gmail.com`
+# Production settings (edit with `--environment production`)
+db_prod:
+  host: "YOUR_AZURE_HOST"
+  port: 5432
+  user: "YOUR_AZURE_USER"
+  passwd: "YOUR_AZURE_PASSWORD"
+  name: "YOUR_AZURE_DB_NAME"
+
+# API key used to trigger Azure Function
+api_key: "YOUR_AZURE_FUNCTION_API_KEY"
+
+# Social login
+google:
+  client_id: "YOUR_GOOGLE_CLIENT_ID"
+  client_secret: "YOUR_GOOGLE_CLIENT_SECRET"
+github:
+  client_id: "YOUR_GITHUB_CLIENT_ID"
+  client_secret: "YOUR_GITHUB_CLIENT_SECRET"
+```
+
+(Remember to keep your `RAILS_MASTER_KEY` safe so the app can decrypt credentials.)
+
+#### 4. Database Setup
+```bash
+rails db:create db:migrate db:seed
+```
+
+#### 5. Run the Application
+```bash
+bin/rails s            # http://localhost:3000
+```
+
+---
+
+## 🧑‍💻 Usage
+1. Register or log in (Google / GitHub supported).
+2. Create a **Project** and add your assets.
+3. Click **Start Scan**—AllSafeASM queues a job for the Go scanner.
+4. Watch live scan progress on the dashboard.
+
+---
+
+## 🗺️ Roadmap
+- [ ] Finish CRUD for projects & assets
+- [ ] Integrate Go scanner micro-service
+- [ ] Action Cable live updates
+- [ ] Rich vulnerability dashboard & reporting
+- [ ] Role-based access control (RBAC)
+
+---
+
+## 🤝 Contributing
+Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
+
+```bash
+# Lint & run tests (coming soon)
+$ bundle exec rake
+```
+1. Fork the repository.
+2. Create your feature branch: `git checkout -b feature/awesome-feature`.
+3. Commit your changes: `git commit -m 'feat: add awesome feature'`.
+4. Push to the branch: `git push origin feature/awesome-feature`.
+5. Open a Pull Request.
+
+---
+
+## ✍️ Authors
+- **Abdelrahman Magdi** – [abdomagdi300@gmail.com](mailto:abdomagdi300@gmail.com)
+- **Omar Essam** – [omar.e.gado@gmail.com](mailto:omar.e.gado@gmail.com)
+- **Hazem Osama** – [hazemosama681@gmail.com](mailto:hazemosama681@gmail.com)
+
+Made with ❤️ as a part of the AllSafeASM graduation project at **Faculty of Engineering, Port Said University**.
